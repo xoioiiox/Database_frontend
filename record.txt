@@ -1,0 +1,14 @@
+ npm i axios vue-axios --save 
+ style scoped : 强制执行
+  /*mounted() {
+            // we can implement any method here like
+            this.getPage();
+        }*/
+
+
+11.16
+查看成员bug 只绑定最后一个值
+
+11.17
+float: right 可实现右对齐
+:show-header="false": 隐藏表头
