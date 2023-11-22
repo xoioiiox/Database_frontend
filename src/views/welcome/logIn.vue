@@ -155,7 +155,9 @@
         align-items: center;
     }
     .box-card {
-      background-color: rgba(255,255,255,0.7);
+      background-color: rgba(255,255,255,0.6);
+      border-radius: 20px;
+      width: 400px;
     }
     .card {
         height: 500px;

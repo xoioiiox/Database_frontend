@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <div id="building">
         <div class="head">
             <router-link :to="'/login'" style="text-decoration: none;">
                 <h1>Home</h1>
             </router-link>
         </div>
         <div class="registerCard">
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+          <el-card class="box-card">
+            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="register-form">
                 <el-form-item label="学号" prop="id">
                     <el-col >
                         <el-input v-model="form.id" autocomplete="off"></el-input>
@@ -27,14 +28,14 @@
                       </el-option>
                     </el-select>  
                   </el-form-item>
-                <el-form-item label="密码" prop="pass">
+                <el-form-item label="密码" prop="password">
                     <el-col>
-                        <el-input type="password" v-model="form.pass" autocomplete="off"></el-input>
+                        <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="确认密码" prop="checkPass">
+                <el-form-item label="确认密码" prop="password_again">
                     <el-col>
-                        <el-input type="password" v-model="form.checkPass" autocomplete="off"></el-input>
+                        <el-input type="password" v-model="form.password_again" autocomplete="off"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item>
@@ -42,6 +43,7 @@
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
+          </el-card>
         </div>
     </div>
     
@@ -172,13 +174,30 @@
     }
 </script>
 
-<style>
+<style scoped>
+  #building{
+      background:url("@/assets/images/pexels-jess-bailey-designs-1558691.jpg");
+      background-size: cover;
+      width:100%;
+      height:100%;
+      position:fixed;
+      background-position: center center;
+    }
+    .box-card {
+      background-color: rgba(255,255,255,0.6);
+      border-radius: 20px;
+      width: 400px;
+    }
+    .register-form {
+      margin: 20px 20px 20px 0px
+    }
     .head {
         margin-left: 100px;
     }
     .registerCard {
-        height: 400px;
+        height: 550px;
         display:flex;
         justify-content:center;
+        align-items: center;
     }
 </style>

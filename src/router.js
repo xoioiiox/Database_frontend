@@ -22,8 +22,6 @@ import teamInfo from './views/team/teamInfo'
 import checkTeams from './views/team/checkTeams'
 
 import registerPage from './views/welcome/registerPage'
-import nomalRegister from './views/welcome/nomalRegister'
-import managerRegister from './views/welcome/managerRegister'
 import logIn from './views/welcome/logIn'
 
 import userPage from './views/user/userPage'
@@ -89,14 +87,6 @@ const routes = [
   {
     path: '/project/:id',
     component: projectInfo
-  },
-  {
-    path: '/nomal_register/',
-    component: nomalRegister
-  },
-  {
-    path: '/manager_register/',
-    component: managerRegister
   },
   {
     path: '/joined_project/',
