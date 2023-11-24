@@ -6,11 +6,15 @@
     <el-col span="20">
       <div>
         <el-row>
-          <el-col span="5">{{this.content.name}} {{this.content.time}}</el-col>
+          <el-col span="5">{{this.content.student_name}} {{this.content.time}}</el-col>
           <el-col span="4">
             <!--这里不能加this-->
-            <el-button type="text" @click="replyMainVisible=!replyMainVisible" class="el-button-text">回复</el-button>
-            <el-button type="text" @click="deleteMainVisible=true" class="el-button-text" v-show="checkVisible(this.content.student_id)">删除</el-button>
+            <el-button type="text" class="el-button-text" 
+            @click="replyMainVisible=!replyMainVisible">回复</el-button>
+            <el-button type="text" class="el-button-text" 
+            @click="deleteMainVisible=true" v-show="checkVisible(this.content.student_id)">删除</el-button>
+            <el-button type="text" class="el-button-text" 
+            @click="showSubVisible=!showSubVisible">展开回复</el-button>
             <el-dialog width="30%" title="删除确认" :visible.sync="deleteMainVisible" append-to-body>
               <span>您确认要删除该项目吗</span>
               <span slot="footer" class="dialog-footer">
@@ -28,7 +32,7 @@
           <el-button type="primary" class="submit_button" size="small" @click="submitMainReply()">提交</el-button>
         </el-row>
         <!--回复列表-->
-        <div v-for="(item, index) in this.content.replies" :key="index">
+        <div v-for="(item, index) in this.replies" :key="index" v-show="showSubVisible">
           <el-row>
             <el-col span="2">
               <el-avatar icon="el-icon-user-solid" size="medium"></el-avatar>
@@ -36,7 +40,7 @@
             <el-col span="20">
               <div>
                 <el-row>
-                  <el-col span="8">{{item.name}} 回复 {{item.reply_object_name}} {{item.time}}</el-col>
+                  <el-col span="10">{{item.student_name}} 回复 {{item.reply_to_name}} {{item.time}}</el-col>
                   <el-col span="4">
                     <el-button type="text" class="el-button-text" 
                     @click="item.replySubVisible=!item.replySubVisible">回复</el-button>
@@ -64,10 +68,27 @@
 export default {
   name: 'projectComment',
   props: ['content'],
+  /*async create() {
+    this.discussion_id = this.$route.params.id //todo
+    await this.axios({
+      method: 'get',
+      url: 'http://localhost:8000/buaa_db/get_discussion_replies/',
+      params: {
+        'discussion_id': this.discussion_id
+      }
+    }).then((res)=> {
+      this.replies = res.data.replies
+    })
+  },*/
   data() {
     return {
+      discussion_id: '',
+      replies: [
+        {student_id: '123', student_name: 'Viola', reply_to_name: 'Xoioiiox',time: '2023-11-24', text: '这是一个很好的问题'}
+      ],
       replyMainVisible: false,
       deleteMainVisible: false,
+      showSubVisible: false,
       reply_text: ''
     }
   },
@@ -75,7 +96,7 @@ export default {
     checkVisible(id) {
       console.log(id);
       this.axios({
-        methods: 'get',
+        method: 'get',
         url: '',
       }).then((res)=>{
         if (id == res.data.id) {
@@ -88,7 +109,7 @@ export default {
     },
     deleteProjectMember(id) {
       this.axios({
-        methods: 'post',
+        method: 'post',
         url: '',
         data: id
       }).then((res)=>{
@@ -120,7 +141,7 @@ export default {
         time: strDate
       }
       this.axios({
-        methods: 'post',
+        method: 'post',
         url: '',
         data: data
       }).then((res)=>{
@@ -157,7 +178,7 @@ export default {
         time: strDate
       }
       this.axios({
-        methods: 'post',
+        method: 'post',
         url: '',
         data: data
       }).then((res)=>{

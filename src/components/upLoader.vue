@@ -37,7 +37,7 @@
 <script>
 export default {
     name: "upLoader",
-    props: ['HWid', 'lastSubmit'],
+    props: ['project_id', 'lastSubmit'],
     data() {
         return {
             files: []
@@ -81,14 +81,14 @@ export default {
             } 
             else {
                 formData.append('hw_submit', this.files[0]); // 仅有一个文件
-                formData.append('id', this.HWid);
+                formData.append('id', this.project_id);
                 console.log(formData.get('hw_submit'));
                 this.$axios({
-                    url: 'SH_SubmitHomework/',
                     method: 'post',
+                    url: 'http://localhost:8000/buaa_db/stu_pub_feedback/',
                     data: formData,   // 发现 data 后面直接跟 formData 后端才能接收到
                     headers: {
-                    token: this.$store.getters.getToken
+                        token: this.$store.getters.getToken //todo
                     }
                 }).then(res => {
                     if (res.data.value === 200) {

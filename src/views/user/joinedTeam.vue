@@ -1,64 +1,179 @@
 <template>
-    <div>
-        <div>
-            <homeHeader></homeHeader>
-        </div>
-        <div class="content1">
-            <div>
-                <userSideMenu></userSideMenu>
-            </div>
-            <div class="team_card">
-                <div v-for="(item, index) in teams" :key="index" class="text item" @click="viewTeam(item.id)">
-                    <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                            <span>{{item.team_name}}</span>
-                        </div>
-                        <div class="text item">
-                            {{item.description}}
-                        </div>
-                    </el-card>
-                </div>
-            </div>    
-        </div>
-    </div>
+	<div>
+		<div>
+			<homeHeader></homeHeader>
+		</div>
+		<div class="content1">
+			<userSideMenu></userSideMenu>
+			<div class="Team_card">
+				<el-row :gutter="25" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
+				<el-col v-for="(item, index) in teams" :key="index" class="text item" :span="8">
+					<el-card class="box-card">
+						<div slot="header" class="clearfix">
+							<span>{{item.Team_name}}</span>
+						</div>
+						<div class="item">
+							时间：{{item.time}}
+						</div>
+						<div class="item">
+							地点：{{item.position}}
+						</div>
+						<el-divider></el-divider>
+						<div>
+							<el-button @click="viewTeam(item.id)" type="text">
+								查看详情
+							</el-button>
+							<el-button @click="quitTeam(item.id)" type="text">
+								退出项目
+							</el-button>
+							<el-button @click="item.dialogVisible = !item.dialogVisible" type="text">上传资料</el-button>
+								<div class="submit" v-show="item.dialogVisible">
+									<div class="loaderCss">
+										<upLoader :HWid="nowId" :lastSubmit="last"></upLoader>
+									</div>
+								</div>
+						</div>
+					</el-card>
+				</el-col>
+				</el-row>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-    import homeHeader from "@/components/homeHeader"
-    import userSideMenu from "@/components/userSideMenu"
-    export default {
-        components: {homeHeader, userSideMenu},
-        data() {
-            return {
-                teams: [
-                    {
-                        "id": '1',
-                        "team_name": '团体名称',
-                        "description": '这是一个志愿团体'
-                    }
-                ]
-            }
-        },
-        async create() {
-            await this.axios({
-                methods: 'get',
-                url: '/joined_team/',
-            }).then((res)=>{
-                this.teams = res.data.teams;
-            })
-        },
-        methods: {
-            viewTeam(id) {
-                this.$router.push({
-                    path: '/team/' + id
-                })
-            }
-        }
-    }
+	import homeHeader from "@/components/homeHeader"
+	import userSideMenu from "@/components/userSideMenu"
+	import upLoader from "@/components/upLoader"
+	export default {
+		components: {homeHeader, userSideMenu, upLoader},
+		data() {
+			return {
+				nowId: '',
+				last: '',
+				dialogVisible: false,
+				teams: [
+					{
+						"id": '1',
+						"Team_name": '项目名称',
+						"time": '周五 12:00-14:00',
+						"position": '操场',
+						"description": '这是一项很好的志愿项目',
+						"status": '已完成',
+						dialogVisible: false,
+					},
+					{
+						"id": '2',
+						"Team_name": '项目名称',
+						"time": '周五 12:00-14:00',
+						"position": '操场',
+						"description": '这是一项很好的志愿项目',
+						"status": '已完成',
+						dialogVisible: false
+					},
+					{
+						"id": '3',
+						"Team_name": '项目名称',
+						"time": '周五 12:00-14:00',
+						"position": '操场',
+						"description": '这是一项很好的志愿项目',
+						"status": '已完成',
+						dialogVisible: false
+					},
+					{
+						"id": '4',
+						"Team_name": '项目名称',
+						"time": '周五 12:00-14:00',
+						"position": '操场',
+						"description": '这是一项很好的志愿项目',
+						"status": '已完成',
+						dialogVisible: false
+					},
+					{
+						"id": '4',
+						"Team_name": '项目名称',
+						"time": '周五 12:00-14:00',
+						"position": '操场',
+						"description": '这是一项很好的志愿项目',
+						"status": '已完成',
+						dialogVisible: false
+					},
+				]
+			}
+		},
+		async create() {
+			await this.axios({
+				method: 'get',
+				url: '/joined_Team/',
+			}).then((res)=>{
+				this.teams = res.data.teams;
+			})
+		},
+		methods: {
+			viewTeam(id) {
+				this.$router.push({
+					path: '/Team/' + id
+				})
+			},
+			quitTeam(id) {
+				this.axios({
+					method: 'post',
+					url: 'http://localhost:8000/buaa_db/apply_team_out/',
+					data: {
+            'team_id': id
+          }
+				}).then((res)=>{
+					if (res.data.status == 200) {
+						let msg = this.$message({
+							type: 'success',
+							message: "退出项目成功"
+						});
+						setTimeout(()=> {
+							msg.close();
+						},1000);
+					}
+					else {
+						this.$message({
+							type: 'error',
+							message: "未加入过该项目"
+						});
+					}
+				})
+			},
+		}
+	}
 </script>
 
-<style>
+<style scoped>
 	.content1 {
 		margin-left: 120px;
+	}
+	.Team_card {
+		margin-left: 20px;
+	}
+	.el-divider {
+		margin: 10px 0;
+	}
+	.item {
+		padding: 5px;
+	}
+	.el-row {
+		display:flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	.el-row  .el-card {
+		width: 100%;
+		height: 100%;
+		margin-right: 20px;
+		margin-top: 20px;
+		transition: all .5s;
+	}
+	.el-form-item {
+		margin-bottom: 0 !important;
+	}
+	.pagination-container {
+		margin-top: -3px;
+		margin-bottom: 30px;
 	}
 </style>

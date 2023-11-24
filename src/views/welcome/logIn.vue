@@ -75,20 +75,19 @@
       },
       methods: {
         submitForm(formName) {
-          let data = {
-            id : this.form.id,
-            password : this.form.password,
-            role: this.role
-          }
-          console.log(data);
-          this.$refs[formName].validate((valid) => {
+          this.$refs[formName].validate(async (valid) => {
+            valid = true;
             if (valid) {
-              this.axios({
-                methods: 'post',
+              await this.axios({
+                method: 'post',
                 url: 'http://localhost:8000/buaa_db/login/',
-                data: data
-              }).then((res)=>{
-                console.log(res.data);
+                data: {
+                  id : this.form.id,
+                  password : this.form.password,
+                  role: this.form.role
+                },
+                timeout: 1000
+              }).then(async (res)=>{
                 if (res.data.status === 200) {
                   let msg = this.$message({
                     type: 'success',
@@ -97,10 +96,10 @@
                   setTimeout(()=> {
                     msg.close();
                   },1000);
-                  if (this.role == 0) {
+                  if (this.form.role == 0) {
                     this.$router.push({path: '/home/'})
                   }
-                  else if (this.role == 1) {
+                  else if (this.form.role == 1) {
                     this.$router.push({path:'/managerHome/'})
                   }
                   else {

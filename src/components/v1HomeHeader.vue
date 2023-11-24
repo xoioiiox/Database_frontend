@@ -58,7 +58,7 @@
         methods: {
             logOut() {
                 this.axios({
-                    methods: 'post',
+                    method: 'post',
                     url: 'http://localhost:8000/buaa_db/logout/',
                     data: ''
                 }).then((res)=>{

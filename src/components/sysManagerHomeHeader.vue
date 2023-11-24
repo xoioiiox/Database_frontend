@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <router-link :to="'/home'" style="text-decoration: none;">
+        <router-link :to="'/sysManagerHome/'" style="text-decoration: none;">
             <h1>Home</h1>
         </router-link>
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -29,7 +29,7 @@
         methods: {
             logOut() {
                 this.axios({
-                    methods: 'post',
+                    method: 'post',
                     url: 'http://localhost:8000/buaa_db/logout/',
                     data: ''
                 }).then((res)=>{

@@ -1,7 +1,7 @@
 <template>
     <div>
       <div>
-        <homeHeader></homeHeader>
+        <managerHomeHeader></managerHomeHeader>
       </div>
       <div class="content">
         <el-form ref="form" :model="form" label-width="80px">
@@ -21,17 +21,15 @@
 </template>
 
 <script>
-  import homeHeader from "@/components/homeHeader";
+  import managerHomeHeader from "@/components/managerHomeHeader";
     export default {
-      components: {homeHeader},
+      components: {managerHomeHeader},
       data() {
         return {
             form: {
                 name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                desc: ''
+                profile: '',
+                image: ''
             },
             dynamicTags: [],
             inputVisible: false,
@@ -40,18 +38,10 @@
       },
       methods: {
         onSubmit() {
-          let data = {
-            name: this.form.name,
-            region: this.form.region,
-            date1: this.form.date1,
-            date2: this.form.date2,
-            desc: this.form.desc
-          }
-          console.log(data);
           this.axios({
-            methods: 'post',
-            url: '/createTeam/',
-            data: data
+            method: 'post',
+            url: 'http://localhost:8000/buaa_db/man_create_team/',
+            data: this.form
           }).then((res) => {
             console.log(res.data);
             if (res.data.value === 0) { //后端传回数据

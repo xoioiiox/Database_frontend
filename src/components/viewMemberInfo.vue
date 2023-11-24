@@ -1,18 +1,18 @@
 <template>
-    
+	
 </template>
 
 <script>
 export default {
-    name: 'viewMemberInfo',
-    data() {
-        return {
+	name: 'viewMemberInfo',
+	data() {
+		return {
 
-        }
-    },
-    methods: {
+		}
+	},
+	methods: {
 
-    }
+	}
 
 }
 </script>

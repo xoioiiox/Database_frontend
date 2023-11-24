@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <router-link :to="'/home'" style="text-decoration: none;">
+        <router-link :to="'/managerHome/'" style="text-decoration: none;">
             <h1>Home</h1>
         </router-link>
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -12,7 +12,7 @@
             <router-link :to="'/check_apply/'" style="text-decoration: none;">查看申请</router-link>
         </el-menu-item>
         <!--创建项目 团体-->
-        <router-link :to="'/createProject'">
+        <router-link :to="'/createProject/'">
             <el-col :offset="10" :span="2">
             <el-button icon="el-icon-plus">项目</el-button>
             </el-col>
@@ -23,12 +23,10 @@
             </el-col>
         </router-link>
         <!--消息通知-->
-        <router-link :to="'/check_message/'">
+        <router-link :to="{path: '/check_message', query: {role: 'manager'}}" >
             <el-col :span="2">
             <div class="item">
-                <el-badge :value="messageNum">
-                <el-button icon="el-icon-chat-dot-square"></el-button>
-                </el-badge>
+                <el-button icon="el-icon-chat-dot-square">消息</el-button>
             </div>
             </el-col>
         </router-link>
@@ -50,17 +48,16 @@
     
     <script>
     export default {
-        name: "homeHeader",
-        props: ["messageNum"],
+        name: "managerHomeHeader",
         date() {
             return {
-                messageNum: 0
+
             };
         },
         methods: {
             logOut() {
                 this.axios({
-                    methods: 'post',
+                    method: 'post',
                     url: 'http://localhost:8000/buaa_db/logout/',
                     data: ''
                 }).then((res)=>{

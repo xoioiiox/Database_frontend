@@ -125,7 +125,7 @@
           this.$refs[formName].validate((valid) => {
             if (valid) {
               this.axios({
-                methods: 'post',
+                method: 'post',
                 url: 'http://localhost:8000/buaa_db/register/',
                 data: data
               }).then((res) => {

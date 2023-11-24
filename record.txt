@@ -12,3 +12,6 @@
 11.17
 float: right 可实现右对齐
 :show-header="false": 隐藏表头
+
+11.22
+@click.native="viewProject(item.id)"才能触发跳转

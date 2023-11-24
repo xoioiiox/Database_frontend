@@ -12,7 +12,7 @@
         <router-link :to="'/team_home/'" style="text-decoration: none;">团体</router-link>
     </el-menu-item>
     <!--创建项目 团体-->
-    <router-link :to="'/createProject'">
+    <!--router-link :to="'/createProject'">
         <el-col :offset="10" :span="2">
         <el-button icon="el-icon-plus">项目</el-button>
         </el-col>
@@ -21,10 +21,10 @@
         <el-col :span="2">
         <el-button icon="el-icon-plus">团体</el-button>
         </el-col>
-    </router-link>
+    </router-link-->
     <!--消息通知-->
-    <router-link :to="'/check_message/'">
-        <el-col :span="2">
+    <router-link :to="{path: '/check_message', query: {role: 'normal_user'}}" >
+        <el-col :offset="14" :span="2">
         <div class="item">
             <el-button icon="el-icon-chat-dot-square">消息</el-button>
         </div>
@@ -56,7 +56,7 @@ export default {
     methods: {
         logOut() {
             this.axios({
-                methods: 'post',
+                method: 'post',
                 url: 'http://localhost:8000/buaa_db/logout/',
                 data: ''
             }).then((res)=>{
