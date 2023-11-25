@@ -15,3 +15,6 @@ float: right 可实现右对齐
 
 11.22
 @click.native="viewProject(item.id)"才能触发跳转
+
+11.25
+v-for必须写成(item, index)不可写作(index, item)

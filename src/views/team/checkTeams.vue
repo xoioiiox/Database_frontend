@@ -8,11 +8,32 @@
 				<el-table-column label="操作">
 					<template slot-scope="scope">
 						<el-button type="text" @click="viewTeam(scope.row.id)">查看详情</el-button>
-						<el-button type="text" @click="passApply(scope.row.id)">通过申请</el-button>
-						<el-button type="text" @click="failApply(scope.row.id)">拒绝申请</el-button>
+						<el-button type="text" @click="dealApply(scope.row.id)">处理申请</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
+		</div>
+		<!--审核结果dialog-->
+		<div>
+			<el-dialog title="审核结果反馈" :visible.sync="resultDialogVisible">
+				<el-form :model="form" label-width="80px">
+					<el-form-item label="审核结果">
+						<el-radio-group v-model="form.result">
+							<el-radio label="通过"></el-radio>
+							<el-radio label="拒绝"></el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="原因">
+						<el-input v-model="form.reason"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<div>
+							<el-button @click="submitForm()">提交</el-button>
+							<el-button @click="resultDialogVisible = flase">取消</el-button>
+						</div>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
 		</div>
 	</div>
 </template>
@@ -31,6 +52,8 @@ export default {
 	},
 	data() {
 		return {
+			resultDialogVisible: false,
+			form: {team_id:'', result: '', reason:''},
 			teams : [
 				{id:1, name:"团体一", time:"2023-10-18"},
 				{id:2, name:"团体二", time:"2023-10-21"},
@@ -49,20 +72,27 @@ export default {
 				path: '/team/' + id
 			})
 		},
-		checkPass(id) {
+		dealApply(id) {
+			this.form.team_id = id;
+			this.resultDialogVisible = true; //sync
+		},
+		submitForm() {
 			this.axios({
 				method: 'post',
-				url: '',
-				data: id
+				url: 'http://localhost:8000/buaa_db/admin_check_apply_team/',
+				data: this.form
+			}).then((res)=>{
+				if (res.data.status == 200) {
+					this.$message({
+						message: '审核提交成功',
+						type: 'success'
+					})
+				}
+				else {
+					this.$message.error('审核提交失败')
+				}
 			})
 		},
-		checkFail(id) {
-			this.axios({
-				method: 'post',
-				url: '',
-				data: id
-			})
-		}
 	}
 }
 </script>

@@ -19,10 +19,8 @@
         <div class="card_content">
           <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="发送范围">
-              <el-select v-model="form.range" placeholder="请选择">
-                <el-option label="团体" value="team"></el-option>
-                <el-option label="项目" value="project"></el-option>
-              </el-select>
+                <el-radio v-model="form.type" label="0" @change="handleRadioChange()">团队</el-radio>
+                <el-radio v-model="form.type" label="1" @change="handleRadioChange()">项目</el-radio>
               <el-select v-model="form.reciever" placeholder="请选择">
                 <div v-for="(item, index) in list" :key="index">
                   <el-option :label="item.name" :value="item.id"></el-option>
@@ -30,7 +28,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="内容">
-              <el-input type="textarea" v-model="form.content"></el-input>
+              <el-input type="textarea" :rows="10" v-model="form.content" class="send-text"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit()">立即发送</el-button>
@@ -67,7 +65,7 @@
         list:[{id: '123', name: 'xxx'}]
       }
     },
-    async create() {
+    async create() { //创建时还需要获取该管理员管理的全部团队以及项目
       await this.axios({
         method: 'get',
         url: '/new_message/'
@@ -76,12 +74,12 @@
       })
     },
     methods: {
-      getList() {
-        if (this.form.range == 'team') {
-          this.list = this.team_list;
+      handleRadioChange() {
+        if (this.form.type == '0') {
+          this.list = this.team_list
         }
         else {
-          this.list = this.project_list;
+          this.list = this.project_list
         }
       },
       toMessageList() {
@@ -151,5 +149,8 @@
   .el-badge {
     margin-bottom: 0;
     padding: 0;
+  }
+  .send-text {
+    width: 70%;
   }
 </style>

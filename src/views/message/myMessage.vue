@@ -38,12 +38,12 @@
             </el-table>
           </el-col>
           <el-col span="1"><el-divider direction="vertical"></el-divider></el-col>
-          <!--聊天框-->
-          <el-col span="17">
-            <div v-for="(index,item) in this.notices" :key="index">
-              <el-card>
-                <div>{{item.text}}</div>
-                <div>{{item.time}}</div>
+          <!--聊天框（越往上是越新的消息）-->
+          <el-col span="17" class="custom-scrollbar">
+            <div v-for="(item, index) in this.notices" :key="index">
+              <el-card class="chat-card">
+                <div class="chat-text">{{item.text}}</div>
+                <div class="chat-time">{{item.time}}</div>
               </el-card>
             </div>
           </el-col>
@@ -68,7 +68,15 @@
           {id: '3', type: '1', name: 'xxx志愿项目'},
         ],
         notices: [
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'}
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
+          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
         ]
       }
     },
@@ -196,5 +204,41 @@
   .el-badge {
     margin-bottom: 0;
     padding: 0;
+  }
+  .chat-card {
+    margin-bottom: 20px;
+    margin-right: 100px;
+    border-radius: 10px;  
+  }
+  .chat-text {
+    color:rgba(0, 0, 0, 0.813);
+  }
+  .chat-time {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: right;
+    font-size: small;
+    color: darkgrey;
+  }
+  /*聊天框滚动条*/
+  .custom-scrollbar {
+    width: 700px; /* 定义容器的宽度 */
+    height: 500px; /* 定义容器的高度 */
+    overflow-y: auto; /* 启用垂直滚动条 */
+    overflow-x: hidden; /* 禁用水平滚动条 */
+  }
+
+  /* 自定义滚动条样式 */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
   }
 </style>
