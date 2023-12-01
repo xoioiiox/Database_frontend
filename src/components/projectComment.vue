@@ -29,7 +29,7 @@
         </el-row>
         <el-row v-show="replyMainVisible">
           <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="reply_text" maxlength="100"></el-input>
-          <el-button type="primary" class="submit_button" size="small" @click="submitMainReply()">提交</el-button>
+          <el-button type="primary" class="submit_button" size="small" @click="submitReply()">提交</el-button>
         </el-row>
         <!--回复列表-->
         <div v-for="(item, index) in this.replies" :key="index" v-show="showSubVisible">
@@ -68,18 +68,6 @@
 export default {
   name: 'projectComment',
   props: ['content'],
-  /*async create() {
-    this.discussion_id = this.$route.params.id //todo
-    await this.axios({
-      method: 'get',
-      url: 'http://localhost:8000/buaa_db/get_discussion_replies/',
-      params: {
-        'discussion_id': this.discussion_id
-      }
-    }).then((res)=> {
-      this.replies = res.data.replies
-    })
-  },*/
   data() {
     return {
       discussion_id: '',
@@ -93,11 +81,12 @@ export default {
     }
   },
   methods: {
-    checkVisible(id) {
+    checkVisible(id) { //todo
       console.log(id);
       this.axios({
-        method: 'get',
+        method: 'post',
         url: '',
+        headers: {'Content-Type': 'multipart/form-data'},
       }).then((res)=>{
         if (id == res.data.id) {
           return true;
@@ -107,10 +96,11 @@ export default {
         }
       })
     },
-    deleteProjectMember(id) {
+    deleteProjectMember(id) { //todo
       this.axios({
         method: 'post',
         url: '',
+        headers: {'Content-Type': 'multipart/form-data'},
         data: id
       }).then((res)=>{
         if (res.data.status == 200) {
@@ -124,7 +114,8 @@ export default {
         }
       })
     },
-    submitMainReply() {
+    submitReply() {
+      /*获取时间转化为string*/
       var date = new Date();
       var dateArr = [
         date.getFullYear(),
@@ -143,6 +134,7 @@ export default {
       this.axios({
         method: 'post',
         url: '',
+        headers: {'Content-Type': 'multipart/form-data'},
         data: data
       }).then((res)=>{
         if (res.data.statue == 200) {

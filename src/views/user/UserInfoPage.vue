@@ -66,10 +66,12 @@
   import userSideMenu from "@/components/userSideMenu"
   export default {
     components: {homeHeader, userSideMenu},
-    async create() {
+    async created() {
       await this.axios({
-        method: 'get',
-        url: 'http://localhost:8000/buaa_db/get_personal_profile/'
+        method: 'post',
+        url: 'http://localhost:8000/buaa_db/get_personal_profile/',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: null
       }).then((res)=>{
         this.user_id = res.data.username;
         this.name = res.data.name;
@@ -111,13 +113,12 @@
           ],
           new_password_again: [
             { required: true, message: "请再次输入新密码", trigger: "blur" },
-            //{ validator: checkPass, trigger: "blur" },
           ],
         },
         dialogFormVisible: false,
         form: {
           old_password: "",
-          new_Password: "",
+          new_password: "",
           new_password_again: "",
         },
       }
@@ -136,9 +137,10 @@
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/modify_personal_profile/',
+          headers: {'Content-Type': 'multipart/form-data'},
           data: data
         }).then((res)=>{
-          if (res.data.profile.status == 200) {
+          if (res.data.status == 200) {
             let msg = this.$message({
               type: 'success',
               message: "修改成功"
@@ -161,25 +163,24 @@
             console.log(this.form);
             this.axios({
               method: 'post',
+              credentials: 'include',
               url: 'http://localhost:8000/buaa_db/change_password/',
+              headers: {'Content-Type': 'multipart/form-data'},
               data: this.form
             }).then((res)=>{
-              if (res.data.profile.status == 200) {
-                let msg = this.$message({
+              if (res.data.status == 200) {
+                this.$message({
                   type: 'success',
                   message: "修改密码成功"
                 });
-                setTimeout(()=> {
-                  msg.close();
-                },1000);
               }
-              else if (res.data.profile.status == 400) {
+              else if (res.data.status == 400) {
                 this.$message({
                   type: 'error',
                   message: '两次密码不一致'
                 })
               }
-              else if (res.data.profile.status == 401) {
+              else if (res.data.status == 401) {
                 this.$message({
                   type: 'error',
                   message: '旧密码验证失败'

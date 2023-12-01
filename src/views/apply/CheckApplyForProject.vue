@@ -4,8 +4,8 @@
 		<managerHomeHeader></managerHomeHeader>
 		<div>
 			<el-col span="4" class="sideMenu">
-				<el-menu default-active="2-2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-				<el-menu-item index="1" @click="check_apply_project()">
+				<el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+				<el-menu-item index="1">
 					<i class="el-icon-menu"></i>
 					<span slot="title">项目申请</span>
 				</el-menu-item>
@@ -21,49 +21,39 @@
 				</el-submenu>
 				</el-menu>
 			</el-col>
-			<!--申请加入列表-->
 			<el-col span="18" class="project_apply_table" style="width:65%">
-			<div>
-				<el-button @click="change()">切换</el-button>
-			</div>
+				<div>
+					<el-button @click="change()">切换</el-button>
+				</div>
+				<!--加入-->
 				<el-table :data="in_applies" border v-show="this.isIn">
-					<el-table-column prop="student_name" label="申请人姓名" width="150"></el-table-column>
-					<el-table-column prop="team_name" label="申请加入团队" width="250"></el-table-column>
-					<!--el-table-column prop="type" label="类别" width="100">
-						<template slot-scope="scope">
-							<el-tag :type="getType(scope.row.type)">{{scope.row.type}}</el-tag>
-						</template>
-					</el-table-column-->
+					<el-table-column prop="name" label="申请人姓名" width="150"></el-table-column>
+					<el-table-column prop="project_name" label="申请加入项目" width="250"></el-table-column>
 					<el-table-column label="查看详情" width="350">
 						<template slot-scope="scope">
 							<el-button @click="getStudentInfo(scope.row.student_id)" type="text">查看申请人信息</el-button>
-							<el-button @click="getProjectInfo(scope.row.team_id)" type="text">查看团队详情</el-button>
+							<el-button @click="getProjectInfo(scope.row.project_id)" type="text">查看项目详情</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="审核申请" width="200">
 						<template slot-scope="scope">
-							<el-button @click="dealApply(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
+							<el-button @click="dealApply(scope.row.student_id, scope.row.project_id)" type="text">审核</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-			<!--申请退出列表-->
+				<!--退出-->
 				<el-table :data="out_applies" border v-show="this.isOut">
-					<el-table-column prop="student_name" label="申请人姓名" width="150"></el-table-column>
-					<el-table-column prop="team_name" label="申请退出团队" width="250"></el-table-column>
-					<!--el-table-column prop="type" label="类别" width="100">
-						<template slot-scope="scope">
-							<el-tag :type="getType(scope.row.type)">{{scope.row.type}}</el-tag>
-						</template>
-					</el-table-column-->
+					<el-table-column prop="name" label="申请人姓名" width="150"></el-table-column>
+					<el-table-column prop="project_name" label="申请退出项目" width="250"></el-table-column>
 					<el-table-column label="查看详情" width="350">
 						<template slot-scope="scope">
 							<el-button @click="getStudentInfo(scope.row.student_id)" type="text">查看申请人信息</el-button>
-							<el-button @click="getProjectInfo(scope.row.team_id)" type="text">查看团队详情</el-button>
+							<el-button @click="getProjectInfo(scope.row.project_id)" type="text">查看项目详情</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="审核申请" width="200">
 						<template slot-scope="scope">
-							<el-button @click="dealApply(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
+							<el-button @click="dealApply(scope.row.student_id, scope.row.project_id)" type="text">审核</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -91,7 +81,7 @@
 				</el-form>
 			</el-dialog>
 		</div>
-		<!--用户信息dialog-->
+		<!--个人信息dialog-->
 		<div>
 			<el-dialog title="申请人信息" :visible.sync="studentdialogVisible">
 				<el-descriptions>
@@ -108,44 +98,41 @@
 import managerHomeHeader from "@/components/managerHomeHeader"
 export default {
 	components: {managerHomeHeader},
-	async create() {
+	async created() {
 		await this.axios({
-				method: 'get',
-				url: 'http://localhost:8000/buaa_db/get_in_team_members/'
+			method: 'post',
+			url: 'http://localhost:8000/buaa_db/man_get_stu_in_project/',
+			headers: {'Content-Type': 'multipart/form-data'},
 			}).then((res)=>{
-				this.in_applies = res.data.applies
-			})
-			await this.axios({
-				method: 'get',
-				url: 'http://localhost:8000/buaa_db/get_out_team_member/'
-			}).then((res)=>{
-				this.out_applies = res.data.applies
-			})
+			this.in_applies = res.data.applies
+		})
+		await this.axios({
+			method: 'post',
+			url: 'http://localhost:8000/buaa_db/man_get_stu_out_project/',
+			headers: {'Content-Type': 'multipart/form-data'},
+		}).then((res)=>{
+			this.out_applies = res.data.applies
+		})
 	},
 	data() {
 		return {
-			isIn: true,
-			isOut: false,
-			deal_student_id: '',
-			deal_team_id:'',
-			result: '',
 			in_applies: [
-				{student_id: '1' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '2' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '3' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '4' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
+				{student_id: '1' ,name: '张三', project_id: '1', project_name: '项目一'},
+				{student_id: '1' ,name: '张三', project_id: '1', project_name: '项目一'},
+				{student_id: '1' ,name: '张三', project_id: '1', project_name: '项目一'},
 			],
 			out_applies: [
-				{student_id: '1' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '2' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '3' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '4' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
+				{student_id: '1' ,name: '李四', project_id: '1', project_name: 'xxx项目'},
+				{student_id: '1' ,name: '李四', project_id: '1', project_name: 'xxx项目'},
+				{student_id: '1' ,name: '李四', project_id: '1', project_name: 'xxx项目'},
 			],
 			student_info: {
 				name: '张三', student_id: '21370000', phone_num: '18000000000'
 			},
 			studentdialogVisible: false,
 			resultDialogVisible: false,
+			isIn: true,
+			isOut: false,
 			form: {
 				result: '',
 				reason: ''
@@ -156,9 +143,6 @@ export default {
 		change() {
 			this.isIn = !this.isIn,
 			this.isOut = !this.isOut
-		},
-		check_apply_project() {
-			this.$router.push('/check_apply/');
 		},
 		check_apply_manager() {
 			this.$router.push('/check_apply_manager/');
@@ -176,7 +160,7 @@ export default {
 		},
 		getStudentInfo(student_id) {
 			this.axios({
-				method: 'get',
+				method: 'post',
 				url: '',
 				param: student_id
 			}).then((res)=>{
@@ -184,8 +168,8 @@ export default {
 			})
 			this.studentdialogVisible = true;
 		},
-		getProjectInfo(team_id) {
-			this.$router.push('/project/' + team_id);
+		getProjectInfo(project_id) {
+			this.$router.push('/project/' + project_id);
 		},
 		dealApply(student_id, team_id) {
 			this.deal_student_id = student_id,
@@ -195,7 +179,8 @@ export default {
 		submitForm() {
 			this.axios({
 				method: 'post',
-				url: 'http://localhost:8000/buaa_db/check_team/',
+				url: 'http://localhost:8000/buaa_db/man_check_stu_project/',
+				headers: {'Content-Type': 'multipart/form-data'},
 				data: {
 					'reciever_id': this.student_id,
 					'team_id': this.team_id,

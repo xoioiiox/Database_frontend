@@ -74,7 +74,7 @@
     data() {
       return {
         isManager: true,
-        id: '1',
+        //id: '1',
         project_name: '项目1',
         time: '时间1',
         place: '地点1',
@@ -94,12 +94,12 @@
       }
     },
     async created(){
-      this.id = this.$route.params.id;
       await this.axios({
-        method: 'get',
+        method: 'post',
         url: 'http://localhost:8000/buaa_db/get_project_profile/',
-        params: {
-          'id': this.id
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {
+          'id': this.$route.params.id
         }
       }).then((res) => {
         /*项目基本信息*/
@@ -118,10 +118,11 @@
         this.role = res.data.role
       })
       await this.axios({
-        method: 'get',
+        method: 'post',
         url: 'http://localhost:8000/buaa_db/get_discussion/',
-        params: {
-          'project_id': this.id
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {
+          'project_id': this.$route.params.id
         }
       }).then((res)=>{
         this.discussions = res.data.discussions
@@ -136,8 +137,9 @@
       },*/
       download(row) {
         this.axios({
-          method: 'get',
+          method: 'post',
           url: 'http://localhost:8000/buaa_db/man_get_project_feedback/',
+          headers: {'Content-Type': 'multipart/form-data'},
           param: {
             'project_id': this.id
           }
@@ -162,6 +164,7 @@
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/create_discussion/',
+          headers: {'Content-Type': 'multipart/form-data'},
           data: {
             'project_id': this.id,
             'profile': this.input

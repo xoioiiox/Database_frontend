@@ -20,7 +20,7 @@
       </div>
       <div class="Team">
       <el-row :gutter="40" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
-          <el-col v-for="(item, index) in Teams" :key="index" :span="8">
+          <el-col v-for="(item, index) in teams" :key="index" :span="8">
               <el-card class="box-card" :body-style="{ padding: '0px' }">
                   <img class="image"
                   :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/11.fb64916.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundlocation:'center center'}">
@@ -43,17 +43,18 @@
   import homeHeader from "@/components/homeHeader";
   export default {
       components: {homeHeader},
-      async create() {
+      async created() {
           await this.axios({
-          method: 'get',
-          url: 'http://localhost:8000/buaa_db/get_teams/'
+            method: 'post',
+            url: 'http://localhost:8000/buaa_db/get_teams/',
+            headers: {'Content-Type': 'multipart/form-data'},
           }).then((res)=>{
-            this.Teams = res.data.Teams;
+            this.teams = res.data.teams;
           })
       },
       data() {
         return {
-            Teams : [
+            teams : [
                 {id:1, team_name:"团体1"},
                 {id:2, team_name:"团体2"},
                 {id:3, team_name:"团体3"},
@@ -73,7 +74,8 @@
             this.axios({
               method: 'post',
               url: 'http://localhost:8000/buaa_db/apply_team_in/',
-              params: {
+              headers: {'Content-Type': 'multipart/form-data'},
+              data: {
                   'team_id': id
               }
             }).then((res)=>{

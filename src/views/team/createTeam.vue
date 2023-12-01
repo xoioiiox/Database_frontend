@@ -9,7 +9,7 @@
             <el-input v-model="form.name"></el-input>
           </el-form-item>
           <el-form-item label="团体描述">
-            <el-input type="textarea" v-model="form.desc"></el-input>
+            <el-input type="textarea" v-model="form.profile" :rows="10"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -38,28 +38,29 @@
       },
       methods: {
         onSubmit() {
+          console.log(this.form)
           this.axios({
             method: 'post',
+            credentials: 'include',
             url: 'http://localhost:8000/buaa_db/man_create_team/',
+            headers: {'Content-Type': 'multipart/form-data'},
             data: this.form
           }).then((res) => {
-            console.log(res.data);
-            if (res.data.value === 0) { //后端传回数据
-              let msg = this.$message({
-                type: 'success',
-                message: "创建成功"
-              });
-              setTimeout(()=> {
-                msg.close();
-              },1000);
-              this.$router.push({
-                path: '/home'
-              })
-            } else {
+            console.log(res);
+            if (res.data.status == 200) { //后端传回数据
               this.$message({
-                type: 'error',
-                message: this.data.reason
+                type: 'success',
+                message: "创建团队成功"
               });
+              this.$router.push({
+                path: '/ManageTeam/'
+              })
+            }
+            else if (res.data.status == 400) {
+              this.$message.error('团队名称重复');
+            }
+            else {
+              this.$message.error('创建团队失败');
             }
           })
         },
@@ -87,7 +88,7 @@
 
         back() {
           this.$router.push({
-            path: '/home'
+            path: '/ManageTeam/'
           })
         }
       }

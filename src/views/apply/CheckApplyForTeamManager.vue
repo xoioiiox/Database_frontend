@@ -95,7 +95,7 @@ export default {
 		},
 		getStudentInfo(student_id) {
 			this.axios({
-				method: 'get',
+				method: 'post',
 				url: '',
 				param: student_id
 			}).then((res)=>{

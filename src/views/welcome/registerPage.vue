@@ -118,7 +118,7 @@
             id: this.form.id,
             name: this.form.name,
             password: this.form.password,
-            password_again: this.password_again,
+            password_again: this.form.password_again,
             role: this.form.role,
           }
           console.log(data);
@@ -127,17 +127,15 @@
               this.axios({
                 method: 'post',
                 url: 'http://localhost:8000/buaa_db/register/',
+                headers: {'Content-Type': 'multipart/form-data'},
                 data: data
               }).then((res) => {
-                console.log(res.data); //调试
+                console.log("1"); //调试
                 if (res.data.status === 200) {
-                  let msg = this.$message({
+                  this.$message({
                     type: 'success',
                     message: "创建成功"
                   });
-                  setTimeout(()=> {
-                    msg.close();
-                  },1000);
                   this.$router.push({path: '/login/'}) // check
                 } else if (res.data.status == 401) {
                   this.$message({

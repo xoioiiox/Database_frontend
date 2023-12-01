@@ -2,31 +2,31 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
-import managerCheckApply from './views/apply/managerCheckApply'
-import checkApplyManager from './views/apply/checkApplyManager'
-import checkApplyMember from './views/apply/checkApplyMember'
+import CheckApplyForProject from './views/apply/CheckApplyForProject'
+import CheckApplyForTeamManager from './views/apply/CheckApplyForTeamManager'
+import CheckApplyForTeamMember from './views/apply/CheckApplyForTeamMember'
 
-import createProject from './views/project/createProject'
-import projectInfo from './views/project/projectInfo'
+import CreateProject from './views/project/CreateProject'
+import ProjectInfoPage from './views/project/ProjectInfoPage'
 
-import mainHome from './views/home/mainHome'
-import managerHome from './views/home/managerHome'
-import sysManagerHome from './views/home/sysManagerHome'
+import UserProjectArea from './views/home/UserProjectArea'
+import ManageTeam from './views/home/ManageTeam'
+import CheckCreateProjectApply from './views/home/CheckCreateProjectApply'
 
-import myMessage from './views/message/myMessage'
-import newMessage from './views/message/newMessage'
+import MessageArea from './views/message/MessageArea'
+import SendMessage from './views/message/SendMessage'
 
-import createTeam from './views/team/createTeam'
-import teamHome from './views/team/teamHome'
-import teamInfo from './views/team/teamInfo'
-import checkTeams from './views/team/checkTeams'
+import CreateTeam from './views/team/CreateTeam'
+import UserTeamArea from './views/team/UserTeamArea'
+import TeamInfoPage from './views/team/TeamInfoPage'
+import CheckCreatTeamApply from './views/team/CheckCreatTeamApply'
 
-import registerPage from './views/welcome/registerPage'
-import logIn from './views/welcome/logIn'
+import RegisterPage from './views/welcome/RegisterPage'
+import LogIn from './views/welcome/LogIn'
 
-import userPage from './views/user/userPage'
-import joinedProject from './views/user/joinedProject'
-import joinedTeam from './views/user/joinedTeam'
+import UserInfoPage from './views/user/UserInfoPage'
+import UserJoinedProjects from './views/user/UserJoinedProjects'
+import UserJoinedTeams from './views/user/UserJoinedTeams'
  
 // 1.通过Vue.use(插件), 安装插件
 Vue.use(VueRouter)
@@ -42,83 +42,83 @@ const routes = [
   {
     path: '',
     // redirect重定向
-    redirect: '/login/'
+    redirect: '/Login/'
   },
   {
-    path: '/login/',
-    component: logIn
+    path: '/Login/',
+    component: LogIn
   },
   {
     path: '/register/',
-    component: registerPage
+    component: RegisterPage
   },
   {
     path: '/home',
-    component: mainHome
+    component: UserProjectArea
   },
   {
-    path: '/managerHome',
-    component: managerHome
+    path: '/ManageTeam',
+    component: ManageTeam
   },
   {
-    path: '/sysManagerHome',
-    component: sysManagerHome
+    path: '/CheckCreateProjectApply',
+    component: CheckCreateProjectApply
   },
   {
     path: '/user_page/',
-    component: userPage
+    component: UserInfoPage
   },
   {
-    path: '/createProject/',
-    component: createProject
+    path: '/CreateProject/',
+    component: CreateProject
   },
   {
-    path: '/createTeam',
-    component: createTeam
+    path: '/CreateTeam',
+    component: CreateTeam
   },
   {
-    path: '/check_teams',
-    component: checkTeams
+    path: '/CheckCreateTeamApply',
+    component: CheckCreatTeamApply
   },
   {
     path: '/check_message/',
-    component: myMessage
+    component: MessageArea
   },
   {
     path: '/project/:id',
-    component: projectInfo
+    component: ProjectInfoPage
   },
   {
     path: '/joined_project/',
-    component: joinedProject
+    component: UserJoinedProjects
   },
   {
     path: '/joined_team/',
-    component: joinedTeam
+    component: UserJoinedTeams
   },
   {
     path: '/team_home/',
-    component: teamHome
+    component: UserTeamArea
   },
   {
     path: '/team/:id',
-    component: teamInfo
+    component: TeamInfoPage
   },
   {
     path: '/check_apply',
-    component: managerCheckApply
+    component: CheckApplyForProject
   },
   {
     path: '/check_apply_manager/',
-    component: checkApplyManager
+    component: CheckApplyForTeamManager
   },
   {
     path: '/check_apply_member/',
-    component: checkApplyMember
+    component: CheckApplyForTeamMember
   },
   {
     path: '/new_message/',
-    component: newMessage
+    component: SendMessage
   }
 ]
 const router = new VueRouter({

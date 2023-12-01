@@ -104,10 +104,11 @@
 				]
 			}
 		},
-		async create() {
+		async created() {
 			await this.axios({
-				method: 'get',
+				method: 'post',
 				url: '/joined_project/',
+				headers: {'Content-Type': 'multipart/form-data'},
 			}).then((res)=>{
 				this.projects = res.data.projects;
 			})
@@ -122,6 +123,7 @@
 				this.axios({
 					method: 'post',
 					url: 'http://localhost:8000/buaa_db/stu_apply_project_out/',
+					headers: {'Content-Type': 'multipart/form-data'},
 					data: {
 						'project_id': id
 					}
@@ -146,8 +148,9 @@
 			upLoadFile(item) {
 				item.dialogVisible = !item.dialogVisible
 				this.axios({
-					method: 'get',
+					method: 'post',
 					url: 'http://localhost:8000/buaa_db/stu_get_feedback/',
+					headers: {'Content-Type': 'multipart/form-data'},
 					param: {
 						'project_id': item.id
 					}

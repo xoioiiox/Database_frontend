@@ -4,26 +4,41 @@
         <managerHomeHeader></managerHomeHeader>
       </div>
       <div class="content">
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="活动名称">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
           <el-form-item label="活动地点">
             <el-input v-model="form.place"></el-input>
           </el-form-item>
-          <el-form-item label="活动时间">
+          <el-form-item label="活动开始时间">
             <el-col :span="6">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.time_start" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.start_date"
+              value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
             </el-col>
             <el-col class="line" :span="1">
               <div class="center">-</div>
             </el-col>
             <el-col :span="4">
-              <el-time-picker placeholder="选择时间" v-model="form.time_end" style="width: 100%;"></el-time-picker>
+              <el-time-picker placeholder="选择时间" v-model="form.start_time"
+              :format="'HH:mm'" value-format="HH:mm" style="width: 100%;"></el-time-picker>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="活动结束时间">
+            <el-col :span="6">
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.end_date"
+              value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            </el-col>
+            <el-col class="line" :span="1">
+              <div class="center">-</div>
+            </el-col>
+            <el-col :span="4">
+              <el-time-picker placeholder="选择时间" v-model="form.end_time"
+              :format="'HH:mm'" value-format="HH:mm" style="width: 100%;"></el-time-picker>
             </el-col>
           </el-form-item>
           <el-form-item label="发布范围" prop="range">
-            <el-select v-model="form.range" placeholder="请选择">
+            <el-select v-model="form.team_id" placeholder="请选择">
               <el-option
                 v-for="item in ranges"
                 :key="item.value"
@@ -69,25 +84,23 @@
   import managerHomeHeader from "@/components/managerHomeHeader";
     export default {
       components: {managerHomeHeader},
-      /*async created() {
-        this.axios({
-          method: 'get',
-          url: '',
-        }).then((res)=>{
-          this.ranges = res.data.ranges;
-        })
-      },*/
       data() {
         return {
           form: {
             name: '',
             place: '',
-            time_start: '',
-            time_end: '',
+            start_date: '',
+            start_time: '',
+            end_date: '',
+            end_time: '',
             profile: '',
-            private: '',
-            range: '',
-            tags: []
+            private: '0',
+            team_id: '',
+            tags: {},
+            quest_url: '',
+            images: {},
+            files: {},
+            state: 'False'
           },
           ranges:[
             {value: '0', label: '全体'},
@@ -101,39 +114,36 @@
       methods: {
         onSubmit() {
           let data = {
-            team_id: this.team_id,
             name: this.form.name,
-            time_start: this.form.time_start,
-            time_end: this.form.time_end,
+            time: this.form.start_date + ' ' + this.form.start_time + ' - ' + this.form.end_date + ' ' + this.form.end_time,
             place: this.form.place,
             profile: this.form.profile,
             private: this.form.private,
-            range: this.form.range,
-            tag: this.form.tags
+            team_id: this.form.team_id,
+            tags: this.form.tags,
+            quest_url: this.form.quest_url,
+            images: this.form.images,
+            files: this.form.files,
+            state: this.form.state
           }
           console.log(data);
           this.axios({
             method: 'post',
             url: 'http://localhost:8000/buaa_db/man_create_project/',
+            headers: {'Content-Type': 'multipart/form-data'},
             data: data
           }).then((res) => {
             console.log(res.data);
-            if (res.data.value === 200) { //后端传回数据
-              let msg = this.$message({
+            if (res.data.status == 200) { //后端传回数据
+              this.$message({
                 type: 'success',
                 message: "项目创建成功"
               });
-              setTimeout(()=> {
-                msg.close();
-              },1000);
               this.$router.push({
-                path: '/home'
+                path: '/ManageTeam/'
               })
             } else {
-              this.$message({
-                type: 'error',
-                message: "error!"
-              });
+              this.$message.error('创建项目失败');
             }
           })
         },
@@ -161,7 +171,7 @@
 
         back() {
           this.$router.push({
-            path: '/home'
+            path: '/ManageTeam/'
           })
         }
       }

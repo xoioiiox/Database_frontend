@@ -18,3 +18,12 @@ float: right 可实现右对齐
 
 11.25
 v-for必须写成(item, index)不可写作(index, item)
+headers: {'Content-Type': 'multipart/form-data'},
+method: get 全改为 post
+let param = new URLSearchParams()
+param.append('username', 'admin')
+
+12.1
+解决sessionid变动问题：在main.js中加入axios.defaults.withCredentials=true
+将create()改为created()即可与后端相接，否则为模板信息
+注意最后一起解决异步问题

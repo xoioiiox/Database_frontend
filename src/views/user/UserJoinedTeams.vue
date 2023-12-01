@@ -10,13 +10,10 @@
 				<el-col v-for="(item, index) in teams" :key="index" class="text item" :span="8">
 					<el-card class="box-card">
 						<div slot="header" class="clearfix">
-							<span>{{item.Team_name}}</span>
+							<span>{{item.name}}</span>
 						</div>
 						<div class="item">
-							时间：{{item.time}}
-						</div>
-						<div class="item">
-							地点：{{item.position}}
+							团队描述: {{item.profile}}
 						</div>
 						<el-divider></el-divider>
 						<div>
@@ -24,14 +21,8 @@
 								查看详情
 							</el-button>
 							<el-button @click="quitTeam(item.id)" type="text">
-								退出项目
+								退出团队
 							</el-button>
-							<el-button @click="item.dialogVisible = !item.dialogVisible" type="text">上传资料</el-button>
-								<div class="submit" v-show="item.dialogVisible">
-									<div class="loaderCss">
-										<upLoader :HWid="nowId" :lastSubmit="last"></upLoader>
-									</div>
-								</div>
 						</div>
 					</el-card>
 				</el-col>
@@ -44,9 +35,8 @@
 <script>
 	import homeHeader from "@/components/homeHeader"
 	import userSideMenu from "@/components/userSideMenu"
-	import upLoader from "@/components/upLoader"
 	export default {
-		components: {homeHeader, userSideMenu, upLoader},
+		components: {homeHeader, userSideMenu},
 		data() {
 			return {
 				nowId: '',
@@ -55,56 +45,18 @@
 				teams: [
 					{
 						"id": '1',
-						"Team_name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
+						"name": 'xxx团队',
+						"profile": 'xxx团体是一个...',
 						dialogVisible: false,
-					},
-					{
-						"id": '2',
-						"Team_name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '3',
-						"Team_name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '4',
-						"Team_name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '4',
-						"Team_name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
 					},
 				]
 			}
 		},
-		async create() {
+		async created() {
 			await this.axios({
-				method: 'get',
-				url: '/joined_Team/',
+				method: 'post',
+				url: '/joined_team/',
+				headers: {'Content-Type': 'multipart/form-data'},
 			}).then((res)=>{
 				this.teams = res.data.teams;
 			})
@@ -112,16 +64,17 @@
 		methods: {
 			viewTeam(id) {
 				this.$router.push({
-					path: '/Team/' + id
+					path: '/team/' + id
 				})
 			},
 			quitTeam(id) {
 				this.axios({
 					method: 'post',
 					url: 'http://localhost:8000/buaa_db/apply_team_out/',
+					headers: {'Content-Type': 'multipart/form-data'},
 					data: {
-            'team_id': id
-          }
+						'team_id': id
+					}
 				}).then((res)=>{
 					if (res.data.status == 200) {
 						let msg = this.$message({

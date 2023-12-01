@@ -58,10 +58,11 @@
 import managerHomeHeader from "@/components/managerHomeHeader/"
 export default {
   components: {managerHomeHeader},
-  async create() {
+  async created() {
     await this.axios({
-    method: 'get',
-    url: '/sysManagerHome/'
+      method: 'post',
+      url: 'http://localhost:8000/buaa_db/get_manage_teams/',
+      headers: {'Content-Type': 'multipart/form-data'},
     }).then((res)=>{
       this.teams = res.data.teams;
     })
@@ -104,9 +105,10 @@ export default {
     },
     getMember(id) {
       this.axios({
-        method: 'get',
+        method: 'post',
         url: 'http://localhost:8000/buaa_db/get_team_students/',
-        param: {
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {
           'team_id': id
         }
       }).then((res)=>{
@@ -116,9 +118,12 @@ export default {
     },
     getProjects(id) {
       this.axios({
-        method: 'get',
-        url: '',
-        param: id
+        method: 'post',
+        url: 'http://localhost:8000/buaa_db/get_team_projects/',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {
+          'team_id': id
+        }
       }).then((res)=>{
         this.projects = res.data.projects;
       })
@@ -136,6 +141,7 @@ export default {
       this.axios({
         method: 'post',
         url: 'http://localhost:8000/buaa_db/man_delete_project/',
+        headers: {'Content-Type': 'multipart/form-data'},
         data: {
           'project_id': this.deleteProjectId
         }

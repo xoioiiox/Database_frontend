@@ -42,10 +42,11 @@
 import sysManagerHomeHeader from "@/components/sysManagerHomeHeader/"
 export default {
 	components: {sysManagerHomeHeader},
-	async create() {
+	async created() {
 		await this.axios({
-			method: 'get',
-			url: 'http://localhost:8000/buaa_db/admin_get_apply_team/'
+			method: 'post',
+			url: 'http://localhost:8000/buaa_db/admin_get_apply_team/',
+			headers: {'Content-Type': 'multipart/form-data'},
 		}).then((res)=>{
 			this.teams = res.data.teams;
 		})
@@ -80,6 +81,7 @@ export default {
 			this.axios({
 				method: 'post',
 				url: 'http://localhost:8000/buaa_db/admin_check_apply_team/',
+				headers: {'Content-Type': 'multipart/form-data'},
 				data: this.form
 			}).then((res)=>{
 				if (res.data.status == 200) {

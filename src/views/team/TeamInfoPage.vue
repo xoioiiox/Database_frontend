@@ -64,12 +64,12 @@
 			}
 		},
 		async created(){
-			this.id = this.$route.params.id;
 			await this.axios({
-				method: 'get',
+				method: 'post',
 				url: 'http://localhost:8000/buaa_db/get_team_profile/',
-				params: {
-					'team_id': this.id
+				headers: {'Content-Type': 'multipart/form-data'},
+				data: {
+					'team_id': this.$route.params.id
 				}
 			}).then((res) => {
 				this.team_name = res.data.name
@@ -82,9 +82,12 @@
 				this.managers = res.data.managers
 			})
 			await this.axios({
-				method: 'get',
+				method: 'post',
 				url: 'http://localhost:8000/buaa_db/get_team_projects/',
-				param: this.id
+				headers: {'Content-Type': 'multipart/form-data'},
+				data: {
+					'team_id': this.$route.params.id
+				}
 			}).then((res)=>{
 				this.projects = res.data.projects
 			})

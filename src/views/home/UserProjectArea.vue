@@ -25,7 +25,7 @@
         <img class="image"
         :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/0099.7c7d246.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundPosition:'center center'}">
         <div class="card-context">
-          <div class="text-title">{{ item.project_name }}</div>
+          <div class="text-title">{{ item.name }}</div>
           <div class="text_item">{{ item.position }} {{ item.time }}</div>
           <div class="operate">
             <el-button @click="viewProject(item.id)" type="text">查看详情</el-button>
@@ -43,24 +43,26 @@
 import homeHeader from "@/components/homeHeader";
 export default {
   components: {homeHeader},
-  async create() {
+  async created() {
       await this.axios({
-      method: 'get',
-      url: 'http://localhost:8000/buaa_db/get_project/'
+      method: 'post',
+      url: 'http://localhost:8000/buaa_db/get_project/',
+      headers: {'Content-Type': 'multipart/form-data'},
     }).then((res)=>{
+      console.log(res)
       this.projects = res.data.projects;
     })
   },
   data() {
     return {
       projects : [
-        {id:1, project_name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:2, project_name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:3, project_name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:4, project_name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:5, project_name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:6, project_name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:7, project_name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
+        {id:1, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
+        {id:2, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
+        {id:3, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
+        {id:4, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
+        {id:5, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
+        {id:6, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
+        {id:7, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
       ]
     }
   },
@@ -74,19 +76,18 @@ export default {
       this.axios({
         method: 'post',
         url: 'http://localhost:8000/buaa_db/stu_apply_project_in/',
-        params: {
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {
           "project_id": id
         }
       }).then((res)=>{
         if (res.data.status == 200) {
-          let msg = this.$message({
+          this.$message({
             type: 'success',
             message: "申请加入成功"
           });
-          setTimeout(()=> {
-            msg.close();
-          },1000);
-        } else {
+        } 
+        else {
           this.$message({
             type: 'error',
             message: "你已加入过该项目"

@@ -80,11 +80,12 @@
         ]
       }
     },
-    async create() {
+    async created() {
       this.role = this.$route.query.role; // 获取不到？？
       await this.axios({
-        method: 'get',
-        url: 'http://localhost:8000/buaa_db/get_receive_notice_list/'
+        method: 'post',
+        url: 'http://localhost:8000/buaa_db/get_receive_notice_list/',
+        headers: {'Content-Type': 'multipart/form-data'},
       }).then((res)=>{
         this.senders = res.data.senders;
       })
@@ -127,7 +128,7 @@
         if (has_read=="true") return '';
         else return 'primary';
       },
-      readMessage(item) {
+      readMessage(item) { //todo
         item.has_read="true"
         let data = {
           "id": item.id,
@@ -144,13 +145,14 @@
         val;
       },
       toWriteMessage() {
-        this.$router.push('/new_message/');
+        this.$router.push({path: '/new_message/', query:{role:this.$route.query.role}});
       },
       getNotices(type, id) {
         this.axios({
-          method: 'get',
+          method: 'post',
           url: 'http://localhost:8000/buaa_db/get_receive_notice/',
-          param: {
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: {
             'type': type,
             'id': id
           }

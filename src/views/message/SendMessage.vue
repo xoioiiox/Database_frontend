@@ -1,7 +1,9 @@
 <template>
   <div>
     <div>
-      <homeHeader></homeHeader>
+      <homeHeader v-show="isNormal()"></homeHeader>
+      <managerHomeHeader v-show="isManager()"></managerHomeHeader>
+      <sysManagerHomeHeader v-show="isSys()"></sysManagerHomeHeader>
     </div>
     <div >
       <el-card class="message_card">
@@ -43,8 +45,10 @@
 
 <script>
   import homeHeader from "@/components/homeHeader";
+  import managerHomeHeader from "@/components/managerHomeHeader";
+  import sysManagerHomeHeader from "@/components/sysManagerHomeHeader";
   export default {
-    components: {homeHeader},
+    components: {homeHeader, managerHomeHeader, sysManagerHomeHeader},
     data() {
       return {
         form: {
@@ -60,20 +64,40 @@
         project_list: [
           {id: '1', name: 'p1'},
           {id: '2', name: 'p2'},
-          {id: '3', name: 'p3'},
         ],
         list:[{id: '123', name: 'xxx'}]
       }
     },
-    async create() { //创建时还需要获取该管理员管理的全部团队以及项目
+    async created() { //创建时需要获取该管理员管理的全部团队，在点击团队后选择项目
       await this.axios({
-        method: 'get',
+        method: 'post',
         url: '/new_message/'
       }).then((res)=>{
         this.messages = res.data.messages;
       })
     },
     methods: {
+      isNormal() {
+        console.log(this.$route.query.role);
+        if (this.$route.query.role === "normal_user") {
+          return true;
+        }
+        else {
+          return false;
+        }
+      },
+      isManager() {
+        if (this.$route.query.role === 'manager') {
+          return true;
+        }
+        return false
+      },
+      isSys() {
+        if (this.$route.query.role === 'sysManager') {
+          return true;
+        }
+        return false
+      },
       handleRadioChange() {
         if (this.form.type == '0') {
           this.list = this.team_list
@@ -83,12 +107,13 @@
         }
       },
       toMessageList() {
-        this.$router.push('/check_message/');
+        this.$router.push({path: '/check_message/', query:{role:this.$route.query.role}});
       },
       onSubmit() {
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/pub_notice/',
+          headers: {'Content-Type': 'multipart/form-data'},
           data: {
             'type': this.form.type,
             'reciever': this.form.reciever,

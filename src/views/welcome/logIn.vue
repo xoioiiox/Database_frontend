@@ -80,7 +80,9 @@
             if (valid) {
               await this.axios({
                 method: 'post',
+                credentials: 'include',
                 url: 'http://localhost:8000/buaa_db/login/',
+                headers: {'Content-Type': 'multipart/form-data'},
                 data: {
                   id : this.form.id,
                   password : this.form.password,
@@ -100,10 +102,10 @@
                     this.$router.push({path: '/home/'})
                   }
                   else if (this.form.role == 1) {
-                    this.$router.push({path:'/managerHome/'})
+                    this.$router.push({path:'/ManageTeam/'})
                   }
                   else {
-                    this.$router.push({path:'/sysManagerHome/'})
+                    this.$router.push({path:'/CheckCreateProjectApply/'})
                   }
                 } else if (res.data.status == 300) {
                   this.$message({
