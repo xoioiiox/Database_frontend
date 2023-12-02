@@ -6,6 +6,7 @@
 		<div class="content1">
 			<userSideMenu></userSideMenu>
 			<div class="Team_card">
+			<el-empty v-if="!this.teams.length" description="描述文字"></el-empty>
 				<el-row :gutter="25" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
 				<el-col v-for="(item, index) in teams" :key="index" class="text item" :span="8">
 					<el-card class="box-card">
@@ -55,9 +56,10 @@
 		async created() {
 			await this.axios({
 				method: 'post',
-				url: '/joined_team/',
+				url: 'http://localhost:8000/buaa_db/stu_get_team/',
 				headers: {'Content-Type': 'multipart/form-data'},
 			}).then((res)=>{
+				console.log(res)
 				this.teams = res.data.teams;
 			})
 		},

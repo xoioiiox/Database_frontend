@@ -25,7 +25,7 @@
                   <img class="image"
                   :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/11.fb64916.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundlocation:'center center'}">
                   <div class="card-context">
-                      <div class="text-title">{{ item.team_name }}</div>
+                      <div class="text-title">{{ item.name }}</div>
                       <div class="text_item">{{ item.location }} {{ item.time }}</div>
                       <div class="operate">
                           <el-button @click="viewTeam(item.id)" type="text">查看详情</el-button>
@@ -55,12 +55,12 @@
       data() {
         return {
             teams : [
-                {id:1, team_name:"团体1"},
-                {id:2, team_name:"团体2"},
-                {id:3, team_name:"团体3"},
-                {id:4, team_name:"团体4"},
-                {id:5, team_name:"团体5"},
-                {id:6, team_name:"团体6"},
+                {id:1, name:"团体1"},
+                {id:2, name:"团体2"},
+                {id:3, name:"团体3"},
+                {id:4, name:"团体4"},
+                {id:5, name:"团体5"},
+                {id:6, name:"团体6"},
             ]
         }
       },

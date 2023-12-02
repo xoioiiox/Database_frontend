@@ -27,3 +27,6 @@ param.append('username', 'admin')
 解决sessionid变动问题：在main.js中加入axios.defaults.withCredentials=true
 将create()改为created()即可与后端相接，否则为模板信息
 注意最后一起解决异步问题
+
+12.2
+<el-empty v-if="!this.notices.length" description="描述文字"></el-empty>

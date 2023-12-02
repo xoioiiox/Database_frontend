@@ -6,33 +6,34 @@
     <el-col span="20">
       <div>
         <el-row>
-          <el-col span="5">{{this.content.student_name}} {{this.content.time}}</el-col>
-          <el-col span="4">
+          <el-col span="5">{{this.content.author_name}} {{this.content.time}}</el-col>
+          <el-col span="8">
             <!--这里不能加this-->
             <el-button type="text" class="el-button-text" 
             @click="replyMainVisible=!replyMainVisible">回复</el-button>
             <el-button type="text" class="el-button-text" 
             @click="deleteMainVisible=true" v-show="checkVisible(this.content.student_id)">删除</el-button>
             <el-button type="text" class="el-button-text" 
-            @click="showSubVisible=!showSubVisible">展开回复</el-button>
-            <el-dialog width="30%" title="删除确认" :visible.sync="deleteMainVisible" append-to-body>
-              <span>您确认要删除该项目吗</span>
+            @click="getReplies(content.id)">展开回复</el-button>
+            <!--el-dialog width="30%" title="删除确认" :visible.sync="deleteMainVisible" append-to-body>
+              <span>您确认要删除该评论吗</span>
               <span slot="footer" class="dialog-footer">
                   <el-button @click="deleteMainVisible = false">取 消</el-button>
                   <el-button type="primary" @click="deleteProjectMember(this.content.comment_id)">确 定</el-button>
               </span>
-            </el-dialog>
+            </el-dialog-->
           </el-col>
         </el-row>
         <el-row>
-          <div>{{this.content.text}}</div>
+          <div>{{this.content.title}}</div>
         </el-row>
+        <!--对于讨论回复-->
         <el-row v-show="replyMainVisible">
           <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="reply_text" maxlength="100"></el-input>
-          <el-button type="primary" class="submit_button" size="small" @click="submitReply()">提交</el-button>
+          <el-button type="primary" class="submit_button" size="small" @click="submitReplytoDiscussion(content.id, content.author_id)">提交</el-button>
         </el-row>
         <!--回复列表-->
-        <div v-for="(item, index) in this.replies" :key="index" v-show="showSubVisible">
+        <div v-for="(item, index) in this.replies" :key="index" v-show="repliesVisible">
           <el-row>
             <el-col span="2">
               <el-avatar icon="el-icon-user-solid" size="medium"></el-avatar>
@@ -40,7 +41,7 @@
             <el-col span="20">
               <div>
                 <el-row>
-                  <el-col span="10">{{item.student_name}} 回复 {{item.reply_to_name}} {{item.time}}</el-col>
+                  <el-col span="10">{{item.from_name}} 回复 {{item.to_name}} {{item.post_time}}</el-col>
                   <el-col span="4">
                     <el-button type="text" class="el-button-text" 
                     @click="item.replySubVisible=!item.replySubVisible">回复</el-button>
@@ -53,7 +54,7 @@
                 </el-row>
                 <el-row v-show="item.replySubVisible">
                   <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="reply_text" maxlength="100"></el-input>
-                  <el-button type="primary" class="submit_button" size="small" @click="submitSubReply(item.name)">提交</el-button>
+                  <el-button type="primary" class="submit_button" size="small" @click="submitReplytoReply(item.name)">提交</el-button>
                 </el-row>
               </div>
             </el-col>
@@ -70,108 +71,70 @@ export default {
   props: ['content'],
   data() {
     return {
-      discussion_id: '',
       replies: [
         {student_id: '123', student_name: 'Viola', reply_to_name: 'Xoioiiox',time: '2023-11-24', text: '这是一个很好的问题'}
       ],
       replyMainVisible: false,
       deleteMainVisible: false,
-      showSubVisible: false,
+      repliesVisible: false,
       reply_text: ''
     }
   },
   methods: {
+    getReplies(discussion_id) {
+      this.axios({
+        method: 'post',
+        headers: {'Content-Type': 'multipart/form-data'},
+        url: 'http://localhost:8000/buaa_db/get_discussion_replies/',
+        data: {'discussion_id': discussion_id},
+      }).then((res)=>{
+        console.log(res)
+        this.replies = res.data.messages
+      })
+      this.repliesVisible = !this.repliesVisible
+    },
     checkVisible(id) { //todo
-      console.log(id);
-      this.axios({
-        method: 'post',
-        url: '',
-        headers: {'Content-Type': 'multipart/form-data'},
-      }).then((res)=>{
-        if (id == res.data.id) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      })
+      id
+      return true
     },
-    deleteProjectMember(id) { //todo
-      this.axios({
-        method: 'post',
-        url: '',
-        headers: {'Content-Type': 'multipart/form-data'},
-        data: id
-      }).then((res)=>{
-        if (res.data.status == 200) {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
-        else {
-          this.$message.error('删除失败')
-        }
-      })
-    },
-    submitReply() {
-      /*获取时间转化为string*/
-      var date = new Date();
-      var dateArr = [
-        date.getFullYear(),
-        date.getMonth() + 1,
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes()
-      ];
-      var strDate = dateArr[0] + "-" + dateArr[1] + "-" + dateArr[2] + " " + dateArr[3] + ":" + dateArr[4];
-      console.log(strDate);
+    submitReplytoDiscussion(discussion_id, author_id) { // 发布回复
       let data = {
-        text : this.reply_text,
-        desName: this.content.name, // 判断传送内容
-        time: strDate
+        receiver_id: author_id,
+        discussion_id: discussion_id,
+        text: this.reply_text,
+        images: '',
+        files: ''
       }
+      console.log(data)
       this.axios({
         method: 'post',
-        url: '',
+        url: 'http://localhost:8000/buaa_db/pub_message/',
         headers: {'Content-Type': 'multipart/form-data'},
         data: data
       }).then((res)=>{
-        if (res.data.statue == 200) {
+        if (res.data.status == 200) {
           this.$message({
             message: '评论成功',
             type: 'success'
           })
         }
         else {
-          this.$message({
-            message: '发布成功',
-            type: 'error'
-          })
+          this.$message.error('评论失败')
         }
       })
       this.reply_text = '';
     },
-    submitSubReply(subName) {
-      var date = new Date();
-      var dateArr = [
-        date.getFullYear(),
-        date.getMonth() + 1,
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes()
-      ];
-      var strDate = dateArr[0] + "-" + dateArr[1] + "-" + dateArr[2] + " " + dateArr[3] + ":" + dateArr[4];
-      console.log(strDate);
+    submitReplytoReply() {
       let data = {
-        text: this.reply_text,
-        mainName: this.content.name,
-        subName: subName,
-        time: strDate
+        receiver_id: '',
+        discussion_id: '',
+        text: '',
+        images: '',
+        files: ''
       }
       this.axios({
         method: 'post',
-        url: '',
+        url: 'http://localhost:8000/buaa_db/get_discussion_replies/',
         data: data
       }).then((res)=>{
         if (res.data.statue == 200) {

@@ -10,7 +10,7 @@
 				<el-col v-for="(item, index) in projects" :key="index" class="text item" :span="8">
 					<el-card class="box-card">
 						<div slot="header" class="clearfix">
-							<span>{{item.project_name}}</span>
+							<span>{{item.name}}</span>
 						</div>
 						<div class="item">
 							时间：{{item.time}}
@@ -58,7 +58,7 @@
 				projects: [
 					{
 						"id": '1',
-						"project_name": '项目名称',
+						"name": '项目名称',
 						"time": '周五 12:00-14:00',
 						"position": '操场',
 						"description": '这是一项很好的志愿项目',
@@ -67,7 +67,7 @@
 					},
 					{
 						"id": '2',
-						"project_name": '项目名称',
+						"name": '项目名称',
 						"time": '周五 12:00-14:00',
 						"position": '操场',
 						"description": '这是一项很好的志愿项目',
@@ -76,7 +76,7 @@
 					},
 					{
 						"id": '3',
-						"project_name": '项目名称',
+						"name": '项目名称',
 						"time": '周五 12:00-14:00',
 						"position": '操场',
 						"description": '这是一项很好的志愿项目',
@@ -85,7 +85,7 @@
 					},
 					{
 						"id": '4',
-						"project_name": '项目名称',
+						"name": '项目名称',
 						"time": '周五 12:00-14:00',
 						"position": '操场',
 						"description": '这是一项很好的志愿项目',
@@ -94,7 +94,7 @@
 					},
 					{
 						"id": '4',
-						"project_name": '项目名称',
+						"name": '项目名称',
 						"time": '周五 12:00-14:00',
 						"position": '操场',
 						"description": '这是一项很好的志愿项目',
@@ -107,7 +107,7 @@
 		async created() {
 			await this.axios({
 				method: 'post',
-				url: '/joined_project/',
+				url: 'http://localhost:8000/buaa_db/stu_get_project/',
 				headers: {'Content-Type': 'multipart/form-data'},
 			}).then((res)=>{
 				this.projects = res.data.projects;

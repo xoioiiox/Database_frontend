@@ -23,7 +23,7 @@
             <el-form-item label="发送范围">
                 <el-radio v-model="form.type" label="0" @change="handleRadioChange()">团队</el-radio>
                 <el-radio v-model="form.type" label="1" @change="handleRadioChange()">项目</el-radio>
-              <el-select v-model="form.reciever" placeholder="请选择">
+              <el-select v-model="form.receiver" placeholder="请选择">
                 <div v-for="(item, index) in list" :key="index">
                   <el-option :label="item.name" :value="item.id"></el-option>
                 </div>
@@ -49,32 +49,25 @@
   import sysManagerHomeHeader from "@/components/sysManagerHomeHeader";
   export default {
     components: {homeHeader, managerHomeHeader, sysManagerHomeHeader},
+    async created() { //创建时需要获取该管理员管理的全部团队，在点击团队后选择项目
+      await this.axios({
+        method: 'post',
+        url: 'http://localhost:8000/buaa_db/get_manage_teams/'
+      }).then((res)=>{
+        this.teams = res.data.teams;
+      })
+    },
     data() {
       return {
         form: {
           type: '',
-          reciever: '',
+          receiver: '',
           content: ''
         },
-        team_list: [
-          {id: '1', name: 't1'},
-          {id: '2', name: 't2'},
-          {id: '3', name: 't3'},
-        ],
-        project_list: [
-          {id: '1', name: 'p1'},
-          {id: '2', name: 'p2'},
-        ],
-        list:[{id: '123', name: 'xxx'}]
+        teams: [],
+        projects: [],
+        list:[]
       }
-    },
-    async created() { //创建时需要获取该管理员管理的全部团队，在点击团队后选择项目
-      await this.axios({
-        method: 'post',
-        url: '/new_message/'
-      }).then((res)=>{
-        this.messages = res.data.messages;
-      })
     },
     methods: {
       isNormal() {
@@ -100,10 +93,10 @@
       },
       handleRadioChange() {
         if (this.form.type == '0') {
-          this.list = this.team_list
+          this.list = this.teams
         }
         else {
-          this.list = this.project_list
+          this.list = this.projects
         }
       },
       toMessageList() {
@@ -116,7 +109,7 @@
           headers: {'Content-Type': 'multipart/form-data'},
           data: {
             'type': this.form.type,
-            'reciever': this.form.reciever,
+            'receiver': this.form.receiver,
             'text': this.form.content
           }
         }).then((res)=>{

@@ -38,12 +38,14 @@
             </el-col>
           </el-form-item>
           <el-form-item label="发布范围" prop="range">
-            <el-select v-model="form.team_id" placeholder="请选择">
+            <el-radio v-model="form.private" label="0">公开项目</el-radio>
+            <el-radio v-model="form.private" label="1" @change="getAllTeams()">团队内项目</el-radio>
+            <el-select v-model="form.team_id" placeholder="请选择" v-show="teamsVisible">
               <el-option
-                v-for="item in ranges"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in teams"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
               </el-option>
             </el-select>  
           </el-form-item>
@@ -102,13 +104,15 @@
             files: {},
             state: 'False'
           },
-          ranges:[
+          teams: [],
+          /*ranges:[
             {value: '0', label: '全体'},
             {value: '1', label: 'xx志愿团体'}
-          ],
+          ],*/
           dynamicTags: [],
           inputVisible: false,
-          inputValue: ''
+          inputValue: '',
+          teamsVisible: false
         };
       },
       methods: {
@@ -168,10 +172,20 @@
           this.inputVisible = false;
           this.inputValue = '';
         },
-
         back() {
           this.$router.push({
             path: '/ManageTeam/'
+          })
+        },
+        getAllTeams() {
+          this.teamsVisible = true
+          this.axios({
+            method: 'post',
+            url: 'http://localhost:8000/buaa_db/get_manage_teams/',
+            headers: {'Content-Type': 'multipart/form-data'},
+          }).then((res)=>{
+            console.log(res)
+            this.teams = res.data.teams
           })
         }
       }

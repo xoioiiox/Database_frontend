@@ -42,7 +42,7 @@
 					</el-table-column>
 					<el-table-column label="审核申请" width="200">
 						<template slot-scope="scope">
-							<el-button @click="dealApply(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
+							<el-button @click="dealApply_in(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -63,15 +63,15 @@
 					</el-table-column>
 					<el-table-column label="审核申请" width="200">
 						<template slot-scope="scope">
-							<el-button @click="dealApply(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
+							<el-button @click="dealApply_out(scope.row.student_id, scope.row.team_id)" type="text">审核</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 			</el-col>
 		</div>
-		<!--审核结果dialog-->
+		<!--审核加入结果dialog-->
 		<div>
-			<el-dialog title="审核结果反馈" :visible.sync="resultDialogVisible">
+			<el-dialog title="审核结果反馈" :visible.sync="resultDialogVisible_in">
 				<el-form :model="form" label-width="80px">
 					<el-form-item label="审核结果">
 						<el-radio-group v-model="form.result">
@@ -84,8 +84,30 @@
 					</el-form-item>
 					<el-form-item>
 						<div>
-							<el-button @click="submitForm()">提交</el-button>
-							<el-button @click="resultDialogVisible = flase">取消</el-button>
+							<el-button @click="submitForm_in()">提交</el-button>
+							<el-button @click="resultDialogVisible_in = flase">取消</el-button>
+						</div>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
+		</div>
+		<!--审核退出结果dialog-->
+		<div>
+			<el-dialog title="审核结果反馈" :visible.sync="resultDialogVisible_out">
+				<el-form :model="form" label-width="80px">
+					<el-form-item label="审核结果">
+						<el-radio-group v-model="form.result">
+							<el-radio label="通过"></el-radio>
+							<el-radio label="拒绝"></el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="原因">
+						<el-input v-model="form.reason"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<div>
+							<el-button @click="submitForm_out()">提交</el-button>
+							<el-button @click="resultDialogVisible_out = flase">取消</el-button>
 						</div>
 					</el-form-item>
 				</el-form>
@@ -111,17 +133,19 @@ export default {
 	async created() {
 		await this.axios({
 			method: 'post',
-			url: 'http://localhost:8000/buaa_db/get_in_team_members/',
+			url: 'http://localhost:8000/buaa_db/get_in_team/',
 			headers: {'Content-Type': 'multipart/form-data'},
 		}).then((res)=>{
+			console.log(res)
 			this.in_applies = res.data.applies
 		})
 		await this.axios({
 			method: 'post',
-			url: 'http://localhost:8000/buaa_db/get_out_team_member/',
+			url: 'http://localhost:8000/buaa_db/get_out_team/',
 			headers: {'Content-Type': 'multipart/form-data'},
 		}).then((res)=>{
-			this.out_applies = res.data.applies
+			console.log(res)
+			this.out_applies = res.data.ids
 		})
 	},
 	data() {
@@ -147,7 +171,8 @@ export default {
 				name: '张三', student_id: '21370000', phone_num: '18000000000'
 			},
 			studentdialogVisible: false,
-			resultDialogVisible: false,
+			resultDialogVisible_in: false,
+			resultDialogVisible_out: false,
 			form: {
 				result: '',
 				reason: ''
@@ -189,22 +214,51 @@ export default {
 		getProjectInfo(team_id) {
 			this.$router.push('/project/' + team_id);
 		},
-		dealApply(student_id, team_id) {
+		dealApply_in(student_id, team_id) {
 			this.deal_student_id = student_id,
 			this.deal_team_id = team_id,
-			this.resultDialogVisible = true
+			this.resultDialogVisible_in = true
 		},
-		submitForm() {
+		dealApply_out(student_id, team_id) {
+			this.deal_student_id = student_id,
+			this.deal_team_id = team_id,
+			this.resultDialogVisible_out = true
+		},
+		submitForm_in() {
+			let data = {
+				'receiver_id': this.deal_student_id,
+				'team_id': this.deal_team_id,
+				'result': this.form.result,
+				'reason': this.form.reason
+			}
+			console.log(data)
 			this.axios({
 				method: 'post',
-				url: 'http://localhost:8000/buaa_db/check_team/',
+				url: 'http://localhost:8000/buaa_db/check_team_in/',
 				headers: {'Content-Type': 'multipart/form-data'},
-				data: {
-					'reciever_id': this.student_id,
-					'team_id': this.team_id,
-					'result': this.form.result,
-					'reason': this.form.reason
+				data: data
+			}).then((res)=>{
+				if (res.data.status == 200) {
+					this.$message({
+						message: '审核结果已发送',
+						type: 'success'
+					})
 				}
+			})
+		},
+		submitForm_out() {
+			let data = {
+				'receiver_id': this.deal_student_id,
+				'team_id': this.deal_team_id,
+				'result': this.form.result,
+				'reason': this.form.reason
+			}
+			console.log(data)
+			this.axios({
+				method: 'post',
+				url: 'http://localhost:8000/buaa_db/check_team_out/',
+				headers: {'Content-Type': 'multipart/form-data'},
+				data: data
 			}).then((res)=>{
 				if (res.data.status == 200) {
 					this.$message({

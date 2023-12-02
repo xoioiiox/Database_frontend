@@ -9,10 +9,18 @@
       <el-card class="message_card">
         <el-row>
           <el-col span="4">
-            <!--div>{{this.$route.query.role}}</div-->
             <div class="card_title">消息中心</div>
           </el-col>
-          <el-col span="2" offset="17">
+          <el-col span="2">
+            <el-button type="text" @click="viewProjectNotices()">项目消息</el-button>
+          </el-col>
+          <el-col span="2">
+            <el-button type="text" @click="viewTeamNotices()">团队消息</el-button>
+          </el-col>
+          <el-col span="2">
+            <el-button type="text" @click="viewPersonNotices()">个人消息</el-button>
+          </el-col>
+          <el-col span="2" offset="10" v-show="writeVisible">
             <el-button type="text" icon="el-icon-edit-outline" @click="toWriteMessage()">
               写通知
             </el-button>
@@ -29,9 +37,8 @@
                   <el-col span="6">
                     <el-avatar icon="el-icon-user-solid"></el-avatar>
                   </el-col>
-                  <el-col span="16" @click="getNotices(scope.row.type, scope.row.id)">{{scope.row.name}}</el-col>
-                  <el-col span="1">
-                    <el-badge :is-dot="getIsHot(scope.row.hasUnRead)" class="item"></el-badge>
+                  <el-col span="16">
+                    <el-button type="text" @click="getNotices(type, scope.row.id)">{{scope.row.name}}</el-button>
                   </el-col>
                 </template>
               </el-table-column>
@@ -39,14 +46,17 @@
           </el-col>
           <el-col span="1"><el-divider direction="vertical"></el-divider></el-col>
           <!--聊天框（越往上是越新的消息）-->
+          <div>
+          <el-empty v-if="!this.notices.length" description="描述文字"></el-empty>
           <el-col span="17" class="custom-scrollbar">
             <div v-for="(item, index) in this.notices" :key="index">
               <el-card class="chat-card">
-                <div class="chat-text">{{item.text}}</div>
+                <div class="chat-text">{{item.profile}}</div>
                 <div class="chat-time">{{item.time}}</div>
               </el-card>
             </div>
-          </el-col>
+          </el-col>  
+          </div>
         </div>
       </el-card>
     </div>
@@ -59,36 +69,34 @@
   import sysManagerHomeHeader from "@/components/sysManagerHomeHeader";
   export default {
     components: {homeHeader, managerHomeHeader, sysManagerHomeHeader},
-    data() {
-      return {
-        role: '',
-        senders: [
-          {id: '1', type: '0', name: 'xxx志愿服务团队'},
-          {id: '2', type: '0', name: 'xxx学院志愿团队'},
-          {id: '3', type: '1', name: 'xxx志愿项目'},
-        ],
-        notices: [
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-          {time: '2023-11-24', text: 'This is a notice... Have a good day~'},
-        ]
-      }
-    },
     async created() {
       this.role = this.$route.query.role; // 获取不到？？
+      if (this.role == 'normal_user') {
+        this.writeVisible = false
+      }
       await this.axios({
         method: 'post',
         url: 'http://localhost:8000/buaa_db/get_receive_notice_list/',
         headers: {'Content-Type': 'multipart/form-data'},
       }).then((res)=>{
-        this.senders = res.data.senders;
+        console.log(res)
+        this.person = res.data.person
+        this.projects = res.data.projects
+        this.teams = res.data.teams
+        this.senders = this.projects // 默认状态为项目消息
       })
+    },
+    data() {
+      return {
+        role: '',
+        writeVisible: true,
+        type: '',
+        person: [],
+        projects: [],
+        teams: [],
+        senders: [],
+        notices: []
+      }
     },
     methods: {
       isNormal() {
@@ -148,17 +156,34 @@
         this.$router.push({path: '/new_message/', query:{role:this.$route.query.role}});
       },
       getNotices(type, id) {
+        let data = {
+          'type': type,
+          'id': id
+        }
+        console.log(data)
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/get_receive_notice/',
           headers: {'Content-Type': 'multipart/form-data'},
-          data: {
-            'type': type,
-            'id': id
-          }
+          data: data
         }).then((res)=>{
           this.notices = res.data.notices
         })
+      },
+      viewProjectNotices() {
+        this.senders = this.projects
+        this.type = '1'
+        this.notices = []
+      },
+      viewTeamNotices() {
+        this.senders = this.teams
+        this.type = '0'
+        this.notices = []
+      },
+      viewPersonNotices() {
+        this.senders = this.person
+        this.type = '2'
+        this.notices = []
       }
     }
   }

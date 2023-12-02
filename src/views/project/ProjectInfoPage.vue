@@ -40,13 +40,13 @@
       <el-card class="sideContent" shadow="never" v-show="this.isManager">
       <div class="member-table">
         <div class="table_head">成员信息</div>
-        <el-table :data="project_members" border :default-sort = "{prop: 'type', order: 'descending'}" size="small">
+        <el-table :data="students" border size="small">
           <el-table-column prop="name" label="姓名" width="80" sortable></el-table-column>
-          <el-table-column prop="type" label="身份" width="100" sortable>
+          <!--el-table-column prop="type" label="身份" width="100" sortable>
             <template slot-scope="scope">
               <el-tag :type="getType(scope.row.type)">{{scope.row.type}}</el-tag>
             </template>
-          </el-table-column>
+          </el-table-column-->
           <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button @click="preview(scope.row)" type="text">详情</el-button>
@@ -68,38 +68,17 @@
 
 <script>
   import homeHeader from "@/components/homeHeader"
-  import projectComment from "@/components/projectComment"
+  import projectComment from "@/components/projectComment" //todo
   export default {
     components: {homeHeader, projectComment},
-    data() {
-      return {
-        isManager: true,
-        //id: '1',
-        project_name: '项目1',
-        time: '时间1',
-        place: '地点1',
-        profile: '这是一项不错的项目balabala',
-        input: '',
-        project_members: [
-          {name: '张三', type: '成员'},
-          {name: '李四', type: '管理员'},
-          {name: '王五', type: '成员'},
-        ],
-        discussions: [
-          {id: '1', student_id: '123', student_name: '张三', time:'2023-11-21', text: '我有一个问题'},
-          {id: '2', student_id: '456', student_name: '李四', time:'2023-11-22', text: '我也有一个问题'},
-          {id: '3', student_id: '789', student_name: '王五', time:'2023-11-23', text: 'I have a question'},
-        ],
-        feedback: ''
-      }
-    },
     async created(){
+      let id = this.$route.params.id
       await this.axios({
         method: 'post',
         url: 'http://localhost:8000/buaa_db/get_project_profile/',
         headers: {'Content-Type': 'multipart/form-data'},
         data: {
-          'id': this.$route.params.id
+          'project_id': id //project_id
         }
       }).then((res) => {
         /*项目基本信息*/
@@ -107,7 +86,7 @@
         this.time = res.data.time
         this.place = res.data.place
         this.profile = res.data.profile
-        this.status = res.data.status //项目状态
+        this.state = res.data.state //项目状态
         this.check = res.data.check //审核是否通过
         this.private = res.data.private
         this.team_name = res.data.team_name
@@ -125,17 +104,63 @@
           'project_id': this.$route.params.id
         }
       }).then((res)=>{
+        console.log(res)
         this.discussions = res.data.discussions
       })
     },
+    data() {
+      return {
+        isManager: true,
+        project_name: '',
+        time: '',
+        place: '',
+        profile: '',
+        state: '',
+        check: '',
+        private: '',
+        team_name: '',
+        tags: [],
+        students: [],
+        managers: [],
+        input: '',
+        discussions: [
+          {id: '1', student_id: '123', student_name: '张三', time:'2023-11-21', text: '我有一个问题'},
+          {id: '2', student_id: '456', student_name: '李四', time:'2023-11-22', text: '我也有一个问题'},
+          {id: '3', student_id: '789', student_name: '王五', time:'2023-11-23', text: 'I have a question'},
+        ],
+        feedback: ''
+      }
+    },
     methods: {
+      submit_discussion() {
+        let data = {
+          project_id: this.$route.params.id,
+          profile: this.input,
+          type: '',
+          title: this.input,
+        }
+        console.log(data)
+        this.axios({
+          method: 'post',
+          url: 'http://localhost:8000/buaa_db/create_discussion/',
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: data
+        }).then((res)=>{
+          if (res.data.status == 200) {
+            this.$message({
+              type: 'success',
+              message: '创建讨论成功'
+            })
+          }
+        })
+      }
       /*preview(row) {
       window.open(this.$axios.defaults.baseURL +
         'DownloadFeedback/?token=' + this.$store.getters.getToken +
         '&project_id=' + this.ruleForm.HWValue +
         '&student_id=' + row.student_id + '&is_view=1')
       },*/
-      download(row) {
+      /*download(row) {
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/man_get_project_feedback/',
@@ -150,37 +175,15 @@
           'DownloadFeedback/?token=' + this.$store.getters.getToken +
           '&project_id=' + this.id +
           '&student_id=' + row.student_id + '&is_view=0'
-      },
-      getType(type) {
+      },*/
+      /*getType(type) {
         if (type == '成员') {
           return 'success';
         }
         else {
           return 'warning';
         }
-      },
-      submit_discussion() {
-        console.log(this.input);
-        this.axios({
-          method: 'post',
-          url: 'http://localhost:8000/buaa_db/create_discussion/',
-          headers: {'Content-Type': 'multipart/form-data'},
-          data: {
-            'project_id': this.id,
-            'profile': this.input
-          }
-        }).then((res)=>{
-          if (res.data.status == 200) {
-            this.$message({
-              message: '评论成功',
-              type: 'success'
-            })
-          }
-          else {
-            this.$message.error('发布评论失败');
-          }
-        })
-      }
+      },*/
     }
   }
 </script>

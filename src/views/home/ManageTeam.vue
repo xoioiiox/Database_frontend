@@ -13,7 +13,7 @@
           <div class="text item">{{ item.description }}</div>
           <el-divider></el-divider>
           <el-button @click="viewTeam(item.id)" type="text">查看详情</el-button>
-          <el-button @click="getProjects(item.id)" type="text">团队项目</el-button>
+          <el-button @click="getProjects(item.id)" type="text">管理团队项目</el-button>
           <el-button @click="getMember(item.id)" type="text">查看成员</el-button>
           <!--对话框-->
           <el-dialog title="团队项目" :visible.sync="projectDialogVisible">
@@ -23,8 +23,8 @@
               <el-table-column property="position" label="地点" width="150"></el-table-column>
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
-                  <el-button @click="getProjectInfo(scope.row.project_id)" size="small">查看项目详情</el-button>
-                  <el-button @click="deleteProject(scope.row.project_id)" type="danger" size="small">删除</el-button>
+                  <el-button @click="getProjectInfo(scope.row.id)" size="small">查看项目详情</el-button>
+                  <el-button @click="deleteProject(scope.row.id)" type="danger" size="small">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -86,10 +86,10 @@ export default {
         {id:4,name: '王小虎'},
       ],
       projects: [
-        {project_id: '1', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {project_id: '2', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {project_id: '3', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {project_id: '4', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
+        {id: '1', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
+        {id: '2', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
+        {id: '3', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
+        {id: '4', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
       ],
       memberDialogVisible: false,
       projectDialogVisible: false,
@@ -143,7 +143,7 @@ export default {
         url: 'http://localhost:8000/buaa_db/man_delete_project/',
         headers: {'Content-Type': 'multipart/form-data'},
         data: {
-          'project_id': this.deleteProjectId
+          'id': this.deleteProjectId
         }
       }).then((res)=>{
         if (res.data.status == 200) {
