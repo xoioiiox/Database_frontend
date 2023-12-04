@@ -8,9 +8,12 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>{{ item.name }}</span>
+            <span>
+              <el-tag :type="getType(item.isCheck)" style="float: right;">{{getStatus(item.isCheck)}}</el-tag>
+            </span>
           </div>
           <div class="text item">{{ item.time }}</div>
-          <div class="text item">{{ item.description }}</div>
+          <div class="text item">{{ item.profile }}</div>
           <el-divider></el-divider>
           <el-button @click="viewTeam(item.id)" type="text">查看详情</el-button>
           <el-button @click="getProjects(item.id)" type="text">管理团队项目</el-button>
@@ -20,7 +23,7 @@
             <el-table :data="projects" height="250">
               <el-table-column property="name" label="项目名称" width="200"></el-table-column>
               <el-table-column property="time" label="时间" width="150"></el-table-column>
-              <el-table-column property="position" label="地点" width="150"></el-table-column>
+              <el-table-column property="place" label="地点" width="150"></el-table-column>
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                   <el-button @click="getProjectInfo(scope.row.id)" size="small">查看项目详情</el-button>
@@ -43,9 +46,20 @@
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                   <el-button @click="viewMemberInfo(scope.row.id)" type="text">查看成员详情</el-button>
-                  </template>
+                </template>
               </el-table-column>
             </el-table>
+          </el-dialog>
+          <el-dialog title="成员信息" :visible.sync="otherInfoVisible">
+            <el-descriptions>
+              <el-descriptions-item label="学号">{{username}}</el-descriptions-item>
+              <el-descriptions-item label="昵称">{{name}}</el-descriptions-item>
+              <el-descriptions-item label="姓名">{{real_name}}</el-descriptions-item>
+              <el-descriptions-item label="电话号码">{{phone_id}}</el-descriptions-item>
+              <el-descriptions-item label="身份证号">{{id_number}}</el-descriptions-item>
+              <el-descriptions-item label="微信号">{{wx_id}}</el-descriptions-item>
+              <el-descriptions-item label="学院">{{faculty_id}}</el-descriptions-item>
+            </el-descriptions>
           </el-dialog>
         </el-card>
       </el-col>
@@ -69,28 +83,18 @@ export default {
   },
   data() {
     return {
-      teams : [
-        {id:1, name:"团体一", time:"2023-10-18", description: "..."},
-        {id:2, name:"团体二", time:"2023-10-21", description: "..."},
-        {id:3, name:"团体一", time:"2023-10-18", description: "..."},
-        {id:4, name:"团体二", time:"2023-10-21", description: "..."},
-        {id:5, name:"团体一", time:"2023-10-18", description: "..."},
-        {id:6, name:"团体二", time:"2023-10-21", description: "..."},
-        {id:7, name:"团体一", time:"2023-10-18", description: "..."},
-        {id:8, name:"团体二", time:"2023-10-21", description: "..."},
-      ],
-      students:[
-        {id:1,name: '王小虎'},
-        {id:2,name: '王小虎'},
-        {id:3,name: '王小虎'},
-        {id:4,name: '王小虎'},
-      ],
-      projects: [
-        {id: '1', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {id: '2', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {id: '3', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-        {id: '4', name: 'xxx项目', time: '2023-11-17', position: 'posxxx', description:'xxxxxxxx'},
-      ],
+      status: '',
+      name: '',
+      username: '',
+      real_name: '',
+      phone_id: '',
+      wx_id: '',
+      id_number: '',
+      faculty_id: '',
+      teams : [],
+      students:[],
+      projects: [],
+      otherInfoVisible: false,
       memberDialogVisible: false,
       projectDialogVisible: false,
       deleteVisible: false,
@@ -98,6 +102,22 @@ export default {
     }
   },
   methods: {
+    getType(status) {
+      if (status == 'flase') {
+        return 'warning'
+      }
+      else {
+        return 'success'
+      }
+    },
+    getStatus(status) {
+      if (status == 'false') {
+        return '审核中'
+      }
+      else {
+        return '审核通过'
+      }
+    },
     viewTeam(id) {
       this.$router.push({
         path: '/team/' + id
@@ -143,7 +163,7 @@ export default {
         url: 'http://localhost:8000/buaa_db/man_delete_project/',
         headers: {'Content-Type': 'multipart/form-data'},
         data: {
-          'id': this.deleteProjectId
+          'project_id': this.deleteProjectId
         }
       }).then((res)=>{
         if (res.data.status == 200) {
@@ -163,7 +183,21 @@ export default {
       window.open(fileUrl);
     },
     viewMemberInfo(id) {
-      id;
+      this.axios({
+        method: 'post',
+        url: 'http://localhost:8000/buaa_db/get_other_profile/',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: {'username': id}
+      }).then((res)=>{
+        this.name = res.data.name,
+        this.username = res.data.username,
+        this.real_name = res.data.real_name,
+        this.phone_id = res.data.phone_id,
+        this.wx_id = res.data.wx_id,
+        this.id_number = res.data.id_number,
+        this.faculty_id = res.data.faculty_id
+      })
+      this.otherInfoVisible = true
     }
   }
 }

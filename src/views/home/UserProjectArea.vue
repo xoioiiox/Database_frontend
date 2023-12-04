@@ -19,6 +19,7 @@
 
   </div>
   <div class="project">
+	<el-empty v-if="!this.projects.length" description="还没有项目喔~"></el-empty>
   <el-row :gutter="40" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
     <el-col v-for="(item, index) in projects" :key="index" :span="8">
       <el-card class="box-card" :body-style="{ padding: '0px' }">
@@ -55,15 +56,7 @@ export default {
   },
   data() {
     return {
-      projects : [
-        {id:1, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:2, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:3, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:4, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:5, name:"活动一",position:"操场", time:"2023-10-18", description: "", status: ""},
-        {id:6, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-        {id:7, name:"活动二",position:"主楼", time:"2023-10-21", description: "", status: ""},
-      ]
+      projects : []
     }
   },
   methods: {

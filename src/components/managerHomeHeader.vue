@@ -9,6 +9,9 @@
 			<router-link :to="'/ManageTeam/'" style="text-decoration: none;">管理团体</router-link>
 		</el-menu-item>
 		<el-menu-item index="2">
+			<router-link :to="'/ManageProject/'" style="text-decoration: none;">管理项目</router-link>
+		</el-menu-item>
+		<el-menu-item index="3">
 			<router-link :to="'/check_apply/'" style="text-decoration: none;">查看申请</router-link>
 		</el-menu-item>
 		<!--创建项目 团体-->
@@ -35,7 +38,7 @@
 			<template slot="title">
 			<el-button type="icon" circle icon="el-icon-user-solid" class="submenu"></el-button>
 			</template>
-			<router-link :to="'/user_page/'" style="text-decoration: none;">
+			<router-link :to="'/manager_page/'" style="text-decoration: none;">
 				<el-menu-item index="4-1">个人中心</el-menu-item>
 			</router-link>
 			<el-menu-item index="4-2">

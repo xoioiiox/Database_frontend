@@ -9,16 +9,10 @@
 					<i class="el-icon-menu"></i>
 					<span slot="title">项目申请</span>
 				</el-menu-item>
-				<el-submenu index="2">
-					<template slot="title">
-					<i class="el-icon-location"></i>
-					<span>团队申请</span>
-					</template>
-					<el-menu-item-group>
-					<el-menu-item index="2-1" @click="check_apply_manager()">团队管理员申请</el-menu-item>
-					<el-menu-item index="2-2" @click="check_apply_member()">团队参与者申请</el-menu-item>
-					</el-menu-item-group>
-				</el-submenu>
+				<el-menu-item index="2" @click="check_apply_member()">
+					<i class="el-icon-menu"></i>
+					<span slot="title">团队申请</span>
+				</el-menu-item>
 				</el-menu>
 			</el-col>
 			<!--申请加入列表-->
@@ -75,8 +69,8 @@
 				<el-form :model="form" label-width="80px">
 					<el-form-item label="审核结果">
 						<el-radio-group v-model="form.result">
-							<el-radio label="通过"></el-radio>
-							<el-radio label="拒绝"></el-radio>
+							<el-radio label="1">通过</el-radio>
+							<el-radio label="0">拒绝</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="原因">
@@ -97,8 +91,8 @@
 				<el-form :model="form" label-width="80px">
 					<el-form-item label="审核结果">
 						<el-radio-group v-model="form.result">
-							<el-radio label="通过"></el-radio>
-							<el-radio label="拒绝"></el-radio>
+							<el-radio label="1">通过</el-radio>
+							<el-radio label="0">拒绝</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="原因">

@@ -24,8 +24,8 @@
 				<el-form :model="form" label-width="80px">
 					<el-form-item label="审核结果">
 						<el-radio-group v-model="form.result">
-							<el-radio label="通过"></el-radio>
-							<el-radio label="拒绝"></el-radio>
+							<el-radio label="1">通过</el-radio>
+							<el-radio label="0">拒绝</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="原因">
@@ -60,14 +60,6 @@ export default {
 	data() {
 		return {
 			resultDialogVisible: false,
-			/*projects : [
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-				{id:1, name:"活动一",location:"操场", time_start:"2023-10-18", time_end: '2023-10-19'},
-			],*/
 			projects: [],
 			form: {project_id: '', result: '', reason:''}
 		}
@@ -83,6 +75,7 @@ export default {
 			this.form.project_id = id;
 		},
 		submitForm() {
+			console.log(this.form)
 			this.axios({
 				method: 'post',
 				url: 'http://localhost:8000/buaa_db/admin_check_apply_project/',

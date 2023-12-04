@@ -19,7 +19,7 @@
 				<div class="team-project-title">发起的项目</div>
 				<div class="project">
 					<el-table :data="projects" stripe :header-cell-style="{background:'#E4E7ED',color:'#303133'}">
-						<el-table-column prop="project_name" label="项目名称"></el-table-column>
+						<el-table-column prop="name" label="项目名称"></el-table-column>
 						<el-table-column prop="position" label="地点"></el-table-column>
 						<el-table-column prop="time" label="日期"></el-table-column>
 						<el-table-column label="操作">
@@ -38,6 +38,25 @@
 	import homeHeader from "@/components/homeHeader";
 	export default {
 		components: {homeHeader},
+		async created(){
+			await this.axios({
+				method: 'post',
+				url: 'http://localhost:8000/buaa_db/get_team_profile/',
+				headers: {'Content-Type': 'multipart/form-data'},
+				data: {
+					'team_id': this.$route.params.id
+				}
+			}).then((res) => {
+				this.team_name = res.data.name
+				this.description = res.data.profile
+				this.image_id = res.data.image_id
+				this.image_url = res.data.image_url
+				this.image_post_time = res.data.image_post_time
+				this.projects = res.data.projects
+				this.students = res.data.students
+				this.managers = res.data.managers
+			})
+		},
 		data() {
 			return {
 				id: '1',
@@ -62,35 +81,6 @@
 					{id: '', name: ''}
 				]
 			}
-		},
-		async created(){
-			await this.axios({
-				method: 'post',
-				url: 'http://localhost:8000/buaa_db/get_team_profile/',
-				headers: {'Content-Type': 'multipart/form-data'},
-				data: {
-					'team_id': this.$route.params.id
-				}
-			}).then((res) => {
-				this.team_name = res.data.name
-				this.description = res.data.profile
-				this.image_id = res.data.image_id
-				this.image_url = res.data.image_url
-				this.image_post_time = res.data.image_post_time
-				this.projects = res.data.projects
-				this.students = res.data.students
-				this.managers = res.data.managers
-			})
-			await this.axios({
-				method: 'post',
-				url: 'http://localhost:8000/buaa_db/get_team_projects/',
-				headers: {'Content-Type': 'multipart/form-data'},
-				data: {
-					'team_id': this.$route.params.id
-				}
-			}).then((res)=>{
-				this.projects = res.data.projects
-			})
 		},
 		methods: {
 			viewProject(id) {

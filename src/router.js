@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 
 import CheckApplyForProject from './views/apply/CheckApplyForProject'
-import CheckApplyForTeamManager from './views/apply/CheckApplyForTeamManager'
 import CheckApplyForTeamMember from './views/apply/CheckApplyForTeamMember'
 
 import CreateProject from './views/project/CreateProject'
 import ProjectInfoPage from './views/project/ProjectInfoPage'
+import ManageProject from './views/project/ManageProject'
 
 import UserProjectArea from './views/home/UserProjectArea'
 import ManageTeam from './views/home/ManageTeam'
@@ -27,6 +27,7 @@ import LogIn from './views/welcome/LogIn'
 import UserInfoPage from './views/user/UserInfoPage'
 import UserJoinedProjects from './views/user/UserJoinedProjects'
 import UserJoinedTeams from './views/user/UserJoinedTeams'
+import ManagerInfoPage from './views/user/ManagerInfoPage'
  
 // 1.通过Vue.use(插件), 安装插件
 Vue.use(VueRouter)
@@ -109,16 +110,20 @@ const routes = [
     component: CheckApplyForProject
   },
   {
-    path: '/check_apply_manager/',
-    component: CheckApplyForTeamManager
-  },
-  {
     path: '/check_apply_member/',
     component: CheckApplyForTeamMember
   },
   {
     path: '/new_message/',
     component: SendMessage
+  },
+  {
+    path: '/manager_page/',
+    component: ManagerInfoPage
+  },
+  {
+    path: '/ManageProject/',
+    component: ManageProject
   }
 ]
 const router = new VueRouter({

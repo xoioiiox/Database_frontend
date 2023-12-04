@@ -10,17 +10,17 @@
       <!--form id="imageForm" enctype="multipart/form-data">
         <input type="file" name="image">
       </form-->
-      <el-upload
-      class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      :show-file-list="false"
-      :on-change="handleAvatarPreview"
-      :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
 
       <el-col :span="16" class="info">
+        <el-upload
+          class="avatar-uploader"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :show-file-list="false"
+          :on-change="handleAvatarPreview"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
         <el-descriptions column="2" border="true">
           <el-descriptions-item label="学号">
             <el-input v-model="user_id"></el-input>
@@ -99,7 +99,7 @@
     },
     data() {
       return {
-        image_formData: '',
+        image_formData: new FormData(),
         imageUrl: '',
         img_id: '',
         user_id: '21373000',
@@ -165,7 +165,7 @@
         this.image_formData.append('real_name', this.real_name)
         this.image_formData.append('phone_id', this.phone_id)
         this.image_formData.append('id_number', this.id_number)
-        this.image_formData.append('wx_id', this.wx_id)
+        this.image_formData.append('wx_id', this.wechat_id)
         this.image_formData.append('faculty_id', this.faculty_id)
         this.image_formData.append('real_name', this.real_name)
         console.log(this.image_formData.get('real_name'))
