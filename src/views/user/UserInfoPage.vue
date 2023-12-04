@@ -7,6 +7,19 @@
       <div class="aside">
         <userSideMenu></userSideMenu>
       </div>
+      <!--form id="imageForm" enctype="multipart/form-data">
+        <input type="file" name="image">
+      </form-->
+      <el-upload
+      class="avatar-uploader"
+      action="https://jsonplaceholder.typicode.com/posts/"
+      :show-file-list="false"
+      :on-change="handleAvatarPreview"
+      :before-upload="beforeAvatarUpload">
+      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </el-upload>
+
       <el-col :span="16" class="info">
         <el-descriptions column="2" border="true">
           <el-descriptions-item label="学号">
@@ -85,16 +98,10 @@
       })
     },
     data() {
-      /*var checkPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.form.new_password) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
-      }
-      };*/
       return {
+        image_formData: '',
+        imageUrl: '',
+        img_id: '',
         user_id: '21373000',
         name: 'a',
         role: '1',
@@ -124,21 +131,49 @@
       }
     },
     methods: {
-      changeInfo() {
-        let data = {
-            "real_name": this.real_name,
-            "phone_id": this.phone_id,
-            "id_number": this.id_number,
-            "wx_id": this.wechat_id,
-            "faculty_id": this.faculty_id,
-            "image": this.image_id //todo
+      /*uploadHttpRequest(data) {
+        let formData = new FormData();
+        formData.append('img', data.file);
+        console.log(formData.get('img'))
+        this.axios({
+          method: 'post',
+          url: 'UploadImage/',
+          data: formData,
+        }).then((res) => {
+          console.log(res.data.url);
+          console.log(data.file);
+          this.imageUrl = res.data.url;
+          this.img_id = res.data.id;
+        })
+      },*/
+      handleAvatarPreview(file) {
+        console.log(true);
+        let fd = new FormData()
+        fd.append('image', file.raw)
+        this.image_formData = fd
+        this.imageUrl = URL.createObjectURL(file.raw);
+        console.log(this.imageUrl);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
         }
-        console.log(data);
+        return isJPG;
+      },
+      changeInfo() {
+        this.image_formData.append('real_name', this.real_name)
+        this.image_formData.append('phone_id', this.phone_id)
+        this.image_formData.append('id_number', this.id_number)
+        this.image_formData.append('wx_id', this.wx_id)
+        this.image_formData.append('faculty_id', this.faculty_id)
+        this.image_formData.append('real_name', this.real_name)
+        console.log(this.image_formData.get('real_name'))
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/modify_personal_profile/',
           headers: {'Content-Type': 'multipart/form-data'},
-          data: data
+          data: this.image_formData
         }).then((res)=>{
           if (res.data.status == 200) {
             let msg = this.$message({
@@ -208,5 +243,29 @@
   }
   .changePassButton {
     float: right;
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>
