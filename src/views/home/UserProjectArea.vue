@@ -4,21 +4,19 @@
   <!--向子组件传数据-->
   <homeHeader></homeHeader>
   </div>
-  <!--div class="carousel">
-    <div class="block">
-      <span class="demonstration"></span>
-      <el-carousel height="150px">
-          <el-carousel-item v-for="item in 4" :key="item">
-          <h3 class="small">{{ item }}</h3>
-          </el-carousel-item>
-      </el-carousel>
-    </div>
-  </div-->
+  <div class="project">
   <!--筛选项目-->
   <div class="select">
-
+    <el-select v-model="tag" placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <el-button @click="search()">搜索</el-button>
   </div>
-  <div class="project">
 	<el-empty v-if="!this.projects.length" description="还没有项目喔~"></el-empty>
   <el-row :gutter="40" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
     <el-col v-for="(item, index) in projects" :key="index" :span="8">
@@ -26,7 +24,10 @@
         <img class="image"
         :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/0099.7c7d246.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundPosition:'center center'}">
         <div class="card-context">
-          <div class="text-title">{{ item.name }}</div>
+          <div class="text-title">
+            <span>{{ item.name }}</span>
+            <el-tag style="float: right;">{{item.tag}}</el-tag>
+          </div>
           <div class="text_item">{{ item.position }} {{ item.time }}</div>
           <div class="operate">
             <el-button @click="viewProject(item.id)" type="text">查看详情</el-button>
@@ -56,7 +57,19 @@ export default {
   },
   data() {
     return {
-      projects : []
+      projects : [],
+      options: [
+        {label:"全部", value:"全部"},
+        {label:"社区服务", value:"社区服务"},
+        {label:"支教助学", value:"支教助学"},
+        {label:"卫生健康", value:"卫生健康"},
+        {label:"环境保护", value:"环境保护"},
+        {label:"文化艺术", value:"文化艺术"},
+        {label:"平安综治", value:"平安综治"},
+        {label:"交通引导", value:"交通引导"},
+        {label:"其他", value:"其他"}
+      ],
+      tag: ''
     }
   },
   methods: {
@@ -87,12 +100,38 @@ export default {
           })
         }
       })
+    },
+    search() {
+      if (this.tag == "全部") {
+        this.axios({
+          method: 'post',
+          url: 'http://localhost:8000/buaa_db/get_project/',
+          headers: {'Content-Type': 'multipart/form-data'},
+        }).then((res)=>{
+          console.log(res)
+          this.projects = res.data.projects;
+        })
+      }
+      else {
+        this.axios({
+          method: 'post',
+          url: 'http://localhost:8000/buaa_db/search_project_tag/',
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: {"tag": this.tag}
+        }).then((res)=>{
+          console.log(res)
+          this.projects = res.data.projects;
+        })  
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+  .select {
+    margin-bottom: 20px;
+  }
   .image {
     width: 100%;
     height: 180px;

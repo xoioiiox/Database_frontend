@@ -78,6 +78,7 @@
           headers: {'Content-Type': 'multipart/form-data'},
           data: null
         }).then((res)=>{
+          console.log(res)
           this.user_id = res.data.username;
           this.name = res.data.name;
           this.real_name = res.data.real_name;
@@ -85,7 +86,7 @@
           this.id_number = res.data.id_number;
           this.wechat_id = res.data.wx_id;
           this.faculty_id = res.data.faculty_id;
-          this.image_id = res.data.image_id; //头像id
+          this.image_url = res.data.image_url; //头像id
           this.role = res.data.role; //0.1.2
         })
       },
@@ -102,7 +103,7 @@
           phone_id: '18000000000',
           wechat_id: '2000000',
           faculty_id: 'cs',
-          image_id: '...',
+          image_url: '',
           rules: {
             old_password: [
               { required: true, message: "请输入原密码", trigger: "blur" },

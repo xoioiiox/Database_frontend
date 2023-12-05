@@ -6,6 +6,7 @@
 		<div class="content1">
 			<userSideMenu></userSideMenu>
 			<div class="project_card">
+				<el-empty v-if="!this.projects.length" description="你还没有加入项目喔~"></el-empty>
 				<el-row :gutter="25" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
 				<el-col v-for="(item, index) in projects" :key="index" class="text item" :span="8">
 					<el-card class="box-card">
@@ -54,54 +55,7 @@
 		data() {
 			return {
 				last: '',
-				dialogVisible: false,
-				projects: [
-					{
-						"id": '1',
-						"name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false,
-					},
-					{
-						"id": '2',
-						"name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '3',
-						"name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '4',
-						"name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-					{
-						"id": '4',
-						"name": '项目名称',
-						"time": '周五 12:00-14:00',
-						"position": '操场',
-						"description": '这是一项很好的志愿项目',
-						"status": '已完成',
-						dialogVisible: false
-					},
-				]
+				projects: []
 			}
 		},
 		async created() {
@@ -146,17 +100,19 @@
 				})
 			},
 			upLoadFile(item) {
+				if (!item.dialogVisible) {
+					this.axios({
+						method: 'post',
+						url: 'http://localhost:8000/buaa_db/stu_get_feedback/',
+						headers: {'Content-Type': 'multipart/form-data'},
+						data: {
+							'project_id': item.id
+						}
+					}).then((res)=>{
+						this.last = res.data.feedback
+					})
+				}
 				item.dialogVisible = !item.dialogVisible
-				this.axios({
-					method: 'post',
-					url: 'http://localhost:8000/buaa_db/stu_get_feedback/',
-					headers: {'Content-Type': 'multipart/form-data'},
-					param: {
-						'project_id': item.id
-					}
-				}).then((res)=>{
-					this.last = res.data.feedback
-				})
 			}
 		}
 	}

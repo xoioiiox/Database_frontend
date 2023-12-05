@@ -149,21 +149,9 @@ export default {
 			deal_student_id: '',
 			deal_team_id:'',
 			result: '',
-			in_applies: [
-				{student_id: '1' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '2' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '3' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '4' ,student_name: '张三', team_id: '1', team_name: 'xxx志愿团体'},
-			],
-			out_applies: [
-				{student_id: '1' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '2' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '3' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-				{student_id: '4' ,student_name: '李四', team_id: '1', team_name: 'xxx志愿团体'},
-			],
-			student_info: {
-				name: '张三', student_id: '21370000', phone_num: '18000000000'
-			},
+			in_applies: [],
+			out_applies: [],
+			student_info: {},
 			studentdialogVisible: false,
 			resultDialogVisible_in: false,
 			resultDialogVisible_out: false,

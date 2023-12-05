@@ -53,25 +53,16 @@
             <el-input type="textarea" v-model="form.profile"></el-input>
           </el-form-item>
           <el-form-item label="活动标签">
-              <el-tag
-                  :key="tag"
-                  v-for="tag in dynamicTags"
-                  closable
-                  :disable-transitions="false"
-                  @close="handleClose(tag)">
-                  {{tag}}
-              </el-tag>
-              <!--enter键绑定-->
-              <el-input
-                  class="input-new-tag"
-                  v-if="inputVisible"
-                  v-model="inputValue"
-                  ref="saveTagInput"
-                  size="small"
-                  @keyup.enter.native="handleInputConfirm"
-                  @blur="handleInputConfirm">
-              </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">+Tag</el-button>
+            <el-radio-group v-model="form.tag" size="small">
+              <el-radio-button label="社区服务" border></el-radio-button>
+              <el-radio-button label="支教助学" border></el-radio-button>
+              <el-radio-button label="卫生健康" border></el-radio-button>
+              <el-radio-button label="环境保护" border></el-radio-button>
+              <el-radio-button label="文化艺术" border></el-radio-button>
+              <el-radio-button label="平安综治" border></el-radio-button>
+              <el-radio-button label="交通引导" border></el-radio-button>
+              <el-radio-button label="其他" border></el-radio-button>
+            </el-radio-group>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -102,7 +93,8 @@
             quest_url: '',
             images: {},
             files: {},
-            state: 'False'
+            state: 'False',
+            tag: '',
           },
           teams: [],
           /*ranges:[
@@ -116,6 +108,16 @@
         };
       },
       methods: {
+        /*handleTrigger($event){
+          let _this = this;
+          let objVal = this.value;
+          window.setTimeout(() => {
+            if (!!objVal && objVal == $event.target.value) {
+              $event.target.checked = false
+              _this.value= ''
+            }
+          }, 0);
+        },*/
         onSubmit() {
           let data = {
             name: this.form.name,
@@ -124,7 +126,7 @@
             profile: this.form.profile,
             private: this.form.private,
             team_id: this.form.team_id,
-            tags: this.form.tags,
+            tag: this.form.tag,
             quest_url: this.form.quest_url,
             images: this.form.images,
             files: this.form.files,

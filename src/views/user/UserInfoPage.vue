@@ -12,6 +12,11 @@
       </form-->
 
       <el-col :span="16" class="info">
+      <div class="avatar">
+        <el-col span="16">
+          <img :src="this.image_url" alt="no" class="tx">
+        </el-col>
+        <el-col span="8">
         <el-upload
           class="avatar-uploader"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -21,6 +26,9 @@
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-col>
+        
+      </div>
         <el-descriptions column="2" border="true">
           <el-descriptions-item label="学号">
             <el-input v-model="user_id"></el-input>
@@ -86,6 +94,7 @@
         headers: {'Content-Type': 'multipart/form-data'},
         data: null
       }).then((res)=>{
+        console.log(res)
         this.user_id = res.data.username;
         this.name = res.data.name;
         this.real_name = res.data.real_name;
@@ -93,7 +102,10 @@
         this.id_number = res.data.id_number;
         this.wechat_id = res.data.wx_id;
         this.faculty_id = res.data.faculty_id;
-        this.image_id = res.data.image_id; //头像id
+        if (res.data.image_url != '') {
+          this.image_url = res.data.image_url;
+        }
+        //this.image_url = 'localhost:8082/images/1.jpg'
         this.role = res.data.role; //0.1.2
       })
     },
@@ -110,7 +122,7 @@
         phone_id: '18000000000',
         wechat_id: '2000000',
         faculty_id: 'cs',
-        image_id: '...',
+        image_url: 'http://localhost:8082/images/1.jpg',
         rules: {
           old_password: [
             { required: true, message: "请输入原密码", trigger: "blur" },
@@ -267,5 +279,9 @@
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .tx {
+    width: 150px;
+    height: 150px;
   }
 </style>

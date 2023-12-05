@@ -132,19 +132,9 @@ export default {
 	},
 	data() {
 		return {
-			in_applies: [
-				{student_id: '1' ,student_name: '张三', project_id: '1', project_name: '项目一'},
-				{student_id: '1' ,student_name: '张三', project_id: '1', project_name: '项目一'},
-				{student_id: '1' ,student_name: '张三', project_id: '1', project_name: '项目一'},
-			],
-			out_applies: [
-				{student_id: '1' ,student_name: '李四', project_id: '1', project_name: 'xxx项目'},
-				{student_id: '1' ,student_name: '李四', project_id: '1', project_name: 'xxx项目'},
-				{student_id: '1' ,student_name: '李四', project_id: '1', project_name: 'xxx项目'},
-			],
-			student_info: {
-				name: '张三', student_id: '21370000', phone_num: '18000000000'
-			},
+			in_applies: [],
+			out_applies: [],
+			student_info: {},
 			studentdialogVisible: false,
 			resultDialogVisible_in: false,
 			resultDialogVisible_out: false,

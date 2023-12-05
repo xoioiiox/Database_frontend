@@ -2,6 +2,7 @@
   <div>
     <managerHomeHeader></managerHomeHeader>
     <div class="list">
+      <el-empty v-if="!this.teams.length" description="你还未创建团队"></el-empty>
       <!--v-loading?-->
       <el-row :gutter="30" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
       <el-col v-for="(item, index) in teams" :key="index" class="item" :span="8">

@@ -6,7 +6,7 @@
 		<div class="content1">
 			<userSideMenu></userSideMenu>
 			<div class="Team_card">
-			<el-empty v-if="!this.teams.length" description="描述文字"></el-empty>
+			<el-empty v-if="!this.teams.length" description="你还没有加入团体喔~"></el-empty>
 				<el-row :gutter="25" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
 				<el-col v-for="(item, index) in teams" :key="index" class="text item" :span="8">
 					<el-card class="box-card">
@@ -43,14 +43,7 @@
 				nowId: '',
 				last: '',
 				dialogVisible: false,
-				teams: [
-					{
-						"id": '1',
-						"name": 'xxx团队',
-						"profile": 'xxx团体是一个...',
-						dialogVisible: false,
-					},
-				]
+				teams: []
 			}
 		},
 		async created() {
