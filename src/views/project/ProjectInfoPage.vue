@@ -56,13 +56,27 @@
           <el-table-column label="Feedback" width="100">
             <template slot-scope="scope">
               <!--el-button @click="preview(scope.row)" type="text">查看</el-button-->
-              <el-button @click="download(scope.row)" type="text">下载</el-button>
+              <el-button @click="getFeedbackList(scope.row)" type="text">下载</el-button>
+              
               </template>
           </el-table-column>
         </el-table>
       </div>
       </el-card>
     </el-col>
+    <div>
+      <el-dialog :visible.sync="feedbackVisible">
+        <el-table :data="this.feedbacks">
+          <el-table-column prop="id" label="文件id"></el-table-column>
+          <el-table-column prop="profile" label="描述"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="download(scope.row.id)"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -128,7 +142,9 @@
           {id: '2', student_id: '456', student_name: '李四', time:'2023-11-22', text: '我也有一个问题'},
           {id: '3', student_id: '789', student_name: '王五', time:'2023-11-23', text: 'I have a question'},
         ],
-        feedback: ''
+        feedbacks: [],
+        feedbackVisible: false,
+        file_profile: {}
       }
     },
     methods: {
@@ -153,37 +169,35 @@
             })
           }
         })
-      }
-      /*preview(row) {
-      window.open(this.$axios.defaults.baseURL +
-        'DownloadFeedback/?token=' + this.$store.getters.getToken +
-        '&project_id=' + this.ruleForm.HWValue +
-        '&student_id=' + row.student_id + '&is_view=1')
-      },*/
-      /*download(row) {
+      },
+      getFeedbackList() {
         this.axios({
           method: 'post',
           url: 'http://localhost:8000/buaa_db/man_get_project_feedback/',
           headers: {'Content-Type': 'multipart/form-data'},
-          param: {
-            'project_id': this.id
+          data: {
+            'project_id': this.$route.params.id,
           }
         }).then((res)=>{
-          this.feedback = res.data.feedback
+          console.log(res)
+          this.feedbacks = res.data.feedbacks
         })
-        window.location.href=this.$axios.defaults.baseURL +
-          'DownloadFeedback/?token=' + this.$store.getters.getToken +
-          '&project_id=' + this.id +
-          '&student_id=' + row.student_id + '&is_view=0'
-      },*/
-      /*getType(type) {
-        if (type == '成员') {
-          return 'success';
-        }
-        else {
-          return 'warning';
-        }
-      },*/
+        this.feedbackVisible = true
+      },
+      download(feedback_id) {
+        this.axios({
+          method: 'post',
+          url: 'http://localhost:8000/buaa_db/get_feedback_profile/',
+          headers: {'Content-Type': 'multipart/form-data'},
+          data: {
+            'feedback_id': feedback_id
+          }
+        }).then((res)=>{
+          console.log(res)
+          this.file_profile = res.data.file_profile[0]
+        })
+        window.open(this.file_profile['url'])
+      },
     }
   }
 </script>
