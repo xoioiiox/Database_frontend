@@ -6,44 +6,63 @@
             </router-link>
         </div>
         <div class="registerCard">
-          <el-card class="box-card">
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="register-form">
-                <el-form-item label="学号" prop="id">
-                    <el-col >
-                        <el-input v-model="form.id" autocomplete="off"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="用户名" prop="name">
-                    <el-col >
-                        <el-input v-model="form.name" autocomplete="off"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="我是" prop="role">
-                    <el-select v-model="form.role" placeholder="请选择">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>  
+          <div class="container">
+            <div class="left-content">
+              <!-- 在这里添加你想要的文字 -->
+              <p>我们致力于</p>
+              <p>为个体和志愿项目</p>
+              <p>提供交流平台</p>
+              <div class="small-text">
+                <p>当前有xx名用户在线</p>
+                <router-link :to="'/login/'" class="small-text" style="text-decoration: none;">
+                  <p> 点此立即登录✔️</p>
+              </router-link>
+              </div>
+            </div>
+            <el-card class="box-card" shadow="never">
+              <div style="text-align: center">
+                <img style="width: 60px; height: 60px; padding: 10px" src="@/assets/images/3.png" alt="logo" class="image">
+              </div>
+              <el-form :model="form" :rules="rules" ref="form" label-width="0px" class="register-form">
+                  <el-form-item label="" prop="id">
+                      <el-col >
+                          <el-input v-model="form.id" autocomplete="off" placeholder="学工号"></el-input>
+                      </el-col>
                   </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-col>
-                        <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="password_again">
-                    <el-col>
-                        <el-input type="password" v-model="form.password_again" autocomplete="off"></el-input>
-                    </el-col>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('form')">提交</el-button>
-                    <el-button @click="resetForm('form')">重置</el-button>
-                </el-form-item>
-            </el-form>
-          </el-card>
+                  <el-form-item label="" prop="name">
+                      <el-col >
+                          <el-input v-model="form.name" autocomplete="off" placeholder="用户名"></el-input>
+                      </el-col>
+                  </el-form-item>
+                  <el-form-item label="" prop="role">
+                      <el-select v-model="form.role" placeholder="请选择身份">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>  
+                    </el-form-item>
+                  <el-form-item label="" prop="password">
+                      <el-col>
+                          <el-input type="password" v-model="form.password" autocomplete="off" placeholder="密码"></el-input>
+                      </el-col>
+                  </el-form-item>
+                  <el-form-item label="" prop="password_again">
+                      <el-col>
+                          <el-input type="password" v-model="form.password_again" autocomplete="off" placeholder="确认密码"></el-input>
+                      </el-col>
+                  </el-form-item>
+                  <el-form-item>
+                    <div class="btns">
+                      <el-button type="primary" @click="submitForm('form')" round class="sub-btn">提交</el-button>
+                      <el-button @click="resetForm('form')" round class="rst-btn">重置</el-button>
+                    </div>
+                  </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
         </div>
     </div>
     
@@ -174,20 +193,30 @@
 
 <style scoped>
   #building{
-      background:url("@/assets/images/pexels-jess-bailey-designs-1558691.jpg");
+      background:url("@/assets/images/bg7.png");
       background-size: cover;
       width:100%;
       height:100%;
       position:fixed;
       background-position: center center;
     }
+    .container {
+      display: flex;
+    }
     .box-card {
+      border: none;
       background-color: rgba(255,255,255,0.6);
       border-radius: 20px;
       width: 400px;
+
+      box-shadow:
+          7px 7px 12px rgba(0, 0, 0, .4),
+          -3px -3px 12px rgba(255, 254, 244, 0.9);
     }
     .register-form {
-      margin: 20px 20px 20px 0px
+      margin: 20px 20px 20px 0px;
+      padding-left: 50px;
+      padding-right: 50px;
     }
     .head {
         margin-left: 100px;
@@ -197,5 +226,44 @@
         display:flex;
         justify-content:center;
         align-items: center;
+    }
+    .left-content {
+      width: 700px;
+      font-size: 80px;
+      padding-left: 0px;
+      font-family: 'Times New Roman';
+      color: #ffffff;
+      font-weight:bolder;
+      text-align: left;
+      vertical-align: top;  /* 让文字从最顶部开始显示 */
+      line-height: 30%;  /* 调整行高，使文字垂直居中 */
+    }
+    .small-text {
+      font-size: 40px;
+      color: white;
+    }
+    .sub-btn {
+      border: none;
+      font-weight: bolder;
+      background-color: #529ffc;
+    }
+    .rst-btn {
+      border: none;
+      font-weight: bolder;
+      color: #529ffc;
+    }
+    /deep/ .el-input__inner {
+      background-color: white !important;
+      border: none;
+      border-radius: 20px;
+    }
+    .router-link-active {
+      color: white;
+    }
+    .image {
+      text-align: center;
+    }
+    .btns {
+      align-content: center;
     }
 </style>
