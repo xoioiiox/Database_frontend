@@ -5,42 +5,78 @@
                 <h1>Home</h1>
             </router-link>
         </div>
-        <div class="login-box">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span class="login-title">🔐北航志愿实践星管理系统</span>
+        <div class="content-container">
+          <div class="left-content">
+            <!-- 在这里添加你想要的文字 -->
+            <p>欢迎来到</p>
+            <p>北航志愿实践星</p>
+            <p>请先登录。</p>
+            <div class="small-text">
+              <p>没有账号？</p>
+              <router-link :to="'/register/'" class="small-text" style="text-decoration: none;">
+                <p> 点此立即注册✔️</p>
+            </router-link>
             </div>
-            <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="demo-form">
-                <el-form-item label="学工号" prop="id">
-                  <el-input v-model="form.id" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                  <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="我是" prop="role">
-                  <el-select v-model="form.role" placeholder="请选择">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>  
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('form')">登录</el-button>
-                    <router-link :to="'/register/'" class="button1" style="text-decoration:none">
-                        <el-button>注册</el-button>
-                    </router-link>
-                </el-form-item>
-            </el-form>
-          </el-card>
+          </div>
+          <div class="login-box">
+            <el-card class="box-card" shadow="never">
+              <div slot="header" class="clearfix" style="text-align: center;">
+                <!-- <span class="login-title">🔐北航志愿实践星</span> -->
+                <img style="width: 60px; height: 60px; padding: 20px" src="@/assets/images/1.png" alt="logo" class="image">
+              </div>
+              <el-form :model="form" status-icon :rules="rules" ref="form" label-width="0px" class="demo-form">
+                  <el-form-item label="" prop="id">
+                    <el-input v-model="form.id" autocomplete="off" placeholder="学工号" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="" prop="password">
+                    <el-input type="password" v-model="form.password" autocomplete="off" placeholder="密码" class="input"></el-input>
+                  </el-form-item>
+                  <el-form-item label="" prop="role">
+                    <el-select v-model="form.role" placeholder="请选择身份" class="input">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>  
+                  </el-form-item>
+                  <div style="text-align: center">
+                    <el-form-item class="btns">
+                        <el-button class="log-btn" type="primary" @click="submitForm('form')" round>登录</el-button>
+                        <router-link :to="'/register/'" class="button1" style="text-decoration:none">
+                            <el-button class="reg-btn" round>注册</el-button>
+                        </router-link>
+                    </el-form-item>
+                  </div>
+              </el-form>
+              <!-- 以下是动画部分 -->
+                  <!-- <div>
+                    <lottie
+                      :options="heartOptions"
+                      :height="100"
+                      :width="100"
+                      v-on:animCreated="heartAnimation"
+                    />
+                  </div>
+                  <div @click="next()">
+                    <el-button>注册</el-button>
+                  </div> -->
+            </el-card>
+          </div>
         </div>
     </div>
 </template>
     
 <script>
+  // import lottie from "../../components/lottie.vue";
+  import loginSuccess from "@/assets/json/cheers.json";
     export default {
+      // eslint-disable-next-line vue/multi-word-component-names
+      name: "",
+      components: {
+        // lottie,
+      },
       data() {
         return { 
           options: [
@@ -70,7 +106,14 @@
             role: [
               { required: true, message: '请选择身份', trigger: 'blur' },
             ]
-          }
+          },
+          heartOptions: {
+            animationData: loginSuccess,
+            loop: false,
+            autoplay: false,
+          },
+          heartanim: null,
+          Direction: -1,
         };
       },
       methods: {
@@ -132,14 +175,33 @@
         },
         resetForm(formName) {
           this.$refs[formName].resetFields();
-        }
+        },
+        heartAnimation: function (anim) {
+          this.heartanim = anim;
+          if (this.Direction == -1) {
+            this.heartanim.goToAndStop(64, true);
+          }
+        },
+        next() {
+          if (this.Direction > 0) {
+            this.Direction = -1;
+            this.heartanim.setDirection(this.Direction);
+            this.heartanim.play();
+            console.log(1);
+          } else {
+            this.Direction = 1;
+            this.heartanim.setDirection(this.Direction);
+            this.heartanim.play();
+            console.log(2);
+          }
+        },
       }
     }
 </script>
 
 <style scoped>
     #building{
-      background:url("@/assets/images/pexels-jess-bailey-designs-1558691.jpg");
+      background:url("@/assets/images/bg4.png");
       background-size: cover;
       width:100%;
       height:100%;
@@ -150,18 +212,27 @@
         margin-left: 100px;
     }
     .login-box {
-        height: 600px;
+        /* height: 500px; */
+        widows: 400px;
         display:flex;
         justify-content:center;
         align-items: center;
+        content: "";
     }
     .box-card {
+      border: none;
       background-color: rgba(255,255,255,0.6);
       border-radius: 20px;
       width: 400px;
+
+      /* background: #e9ecef; */
+        /* color: #333; */
+      box-shadow:
+          7px 7px 12px rgba(0, 0, 0, .4),
+          -3px -3px 12px rgba(255, 254, 244, 0.9);
     }
     .card {
-        height: 500px;
+        height: 700px;
         display:flex;
         justify-content:center;
         align-items: center;
@@ -169,4 +240,57 @@
     .button1 {
         margin-left: 30px;
     }
+    .content-container {
+      display: flex;  /* 使用 flexbox 布局 */
+    }
+    .left-content {
+      width: 700px;
+      font-size: 80px;
+      padding-left: 80px;
+      font-family: 'Times New Roman';
+      color: #ffffff;
+      font-weight:bolder;
+      text-align: left;
+      vertical-align: top;  /* 让文字从最顶部开始显示 */
+      line-height: 30%;  /* 调整行高，使文字垂直居中 */
+      /* text-shadow: 5px 5px 5px #ababab; */
+    }
+    .small-text {
+      font-size: 40px;
+      color: white;
+    }
+    .log-btn {
+      border: none;
+      font-weight: bolder;
+      background-color: #529ffc;
+    }
+    .reg-btn {
+      border: none;
+      font-weight: bolder;
+      color: #529ffc;
+    }
+    .el-form {
+      align-items: center;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+    /deep/ .el-input__inner {
+      background-color: white !important;
+      border: none;
+      border-radius: 20px;
+    }
+    .selected {
+      color: #00D4FF;
+    }
+    .btns {
+      align-content: center;
+    }
+    .router-link-active {
+      color: white;
+    }
+    .image {
+      align-content: center;
+    }
+    
+    
 </style>
