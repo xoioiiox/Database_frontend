@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-col span="2">
-      <el-avatar icon="el-icon-user-solid"></el-avatar>
+      <!--el-avatar icon="el-icon-user-solid"></el-avatar-->
+      <el-avatar :src="this.content.image_url" size="medium"></el-avatar>
     </el-col>
     <el-col span="20">
       <div>
@@ -39,7 +40,8 @@
         <div v-for="(item, index) in this.replies" :key="index" v-show="repliesVisible">
           <el-row>
             <el-col span="2">
-              <el-avatar icon="el-icon-user-solid" size="medium"></el-avatar>
+              <!--el-avatar icon="el-icon-user-solid" size="medium"></el-avatar-->
+              <el-avatar :src="item.image_url" size="medium"></el-avatar>
             </el-col>
             <el-col span="20">
               <div>

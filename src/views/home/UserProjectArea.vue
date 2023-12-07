@@ -21,8 +21,9 @@
   <el-row :gutter="40" style="margin-right: 15px;margin-left: -5px" type="flex" v-loading="loading">
     <el-col v-for="(item, index) in projects" :key="index" :span="8">
       <el-card class="box-card" :body-style="{ padding: '0px' }">
-        <img class="image"
-        :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/0099.7c7d246.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundPosition:'center center'}">
+        <!--img class="image"
+        :style="{backgroundImage:'url(http://bj.chinavolunteer.mca.gov.cn/subsite/static/img/0099.7c7d246.png)',backgroundSize:'cover',backgroundRepeat:'no- repeat',backgroundPosition:'center center'}"-->
+        <img :src="item.image_url">
         <div class="card-context">
           <div class="text-title">
             <span>{{ item.name }}</span>

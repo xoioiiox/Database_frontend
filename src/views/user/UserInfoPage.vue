@@ -27,7 +27,6 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         </el-col>
-        
       </div>
         <el-descriptions column="2" border="true">
           <el-descriptions-item label="学号">

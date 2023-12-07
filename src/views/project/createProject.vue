@@ -8,6 +8,21 @@
           <el-form-item label="活动名称">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
+          <el-form-item label="活动图片">
+            <div class="avatar">
+              <el-col span="8">
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :show-file-list="false"
+                :on-change="handleAvatarPreview"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+              </el-col>
+            </div>
+          </el-form-item>
           <el-form-item label="活动地点">
             <el-input v-model="form.place"></el-input>
           </el-form-item>
@@ -79,6 +94,8 @@
       components: {managerHomeHeader},
       data() {
         return {
+          formData: new FormData,
+          imageUrl: '',
           form: {
             name: '',
             place: '',
@@ -108,6 +125,21 @@
         };
       },
       methods: {
+        handleAvatarPreview(file) {
+          console.log(true);
+          let fd = new FormData()
+          fd.append('image', file.raw)
+          this.formData = fd
+          this.imageUrl = URL.createObjectURL(file.raw);
+          console.log(this.imageUrl);
+        },
+        beforeAvatarUpload(file) {
+          const isJPG = file.type === 'image/jpeg';
+          if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+          }
+          return isJPG;
+        },
         /*handleTrigger($event){
           let _this = this;
           let objVal = this.value;
@@ -119,7 +151,18 @@
           }, 0);
         },*/
         onSubmit() {
-          let data = {
+          this.formData.append('name', this.form.name)
+          this.formData.append('time', this.form.time)
+          this.formData.append('place', this.form.place)
+          this.formData.append('profile', this.form.profile)
+          this.formData.append('private', this.form.private)
+          this.formData.append('team_id', this.form.team_id)
+          this.formData.append('tag', this.form.tag)
+          this.formData.append('quest_url', this.form.quest_url)
+          this.formData.append('state', this.form.state)
+          console.log(this.formData.get('image'))
+
+          /*let data = {
             name: this.form.name,
             time: this.form.start_date + ' ' + this.form.start_time + ' - ' + this.form.end_date + ' ' + this.form.end_time,
             place: this.form.place,
@@ -132,12 +175,12 @@
             files: this.form.files,
             state: this.form.state
           }
-          console.log(data);
+          console.log(data);*/
           this.axios({
             method: 'post',
             url: 'http://localhost:8000/buaa_db/man_create_project/',
             headers: {'Content-Type': 'multipart/form-data'},
-            data: data
+            data: this.formData
           }).then((res) => {
             console.log(res.data);
             if (res.data.status == 200) { //后端传回数据
@@ -217,5 +260,28 @@
       width: 90px;
       margin-left: 10px;
       vertical-align: bottom;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

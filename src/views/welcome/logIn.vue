@@ -88,7 +88,7 @@
                   password : this.form.password,
                   role: this.form.role
                 },
-                timeout: 1000
+                //timeout: 1000
               }).then(async (res)=>{
                 if (res.data.status === 200) {
                   let msg = this.$message({
